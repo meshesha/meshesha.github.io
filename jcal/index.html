@@ -1,6 +1,119 @@
+<!doctype html>
 <html>
+<meta charset='utf-8'>
+<head>
+    <title>jCalJs - A jQuery Jewish Calendar Plugin with Ajax PHP and Joomla support</title>
+<!--[if lt IE 9]>
+	<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script type="text/javascript" src="js/jcal.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script> 
+<link rel="stylesheet" href="css/jcal.css">
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/start/jquery-ui.css">
+<style type="text/css">
+	body, html {
+		background-color:#ccebff;
+		padding:0px;
+		margin:0px;
+		text-align:center;
+		color:#fff;
+		line-height: 1.4em;
+
+	}
+	body {
+		padding:10vh 0;
+	}
+	h1 {
+		text-align: center;
+		font-size: 60px;
+		text-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+	}
+	h2 {
+		font-size:20px;
+		background-color:#33adff;
+		display:inline-block;
+		width:50%;		
+		box-shadow: 0 0 20px #33adff;
+		color:#fff;
+	}
+	.jcal {
+		box-shadow: 0 13px 40px rgba(0, 0, 0, 0.5);
+	}
+
+</style>
+</head>
 <body>
-<h1>jCal.js</h1>
-<p>Wellcome to jCal.js Pages.</p>
+<div class="examples">
+	<h1>jCal.js</h1>
+	<h2>Example 1 - English Gregorian Calendar</h2>
+	<div style="width:50%;display:inline-block;">
+		<div id="my_calendar_greg_en"></div>
+	</div>
+	<br><br>
+	<h2>Example 2 - Hebrew Gregorian Calendar</h2>
+	<div style="width:50%; display:inline-block;">
+		<div id="my_calendar_greg_he"></div>
+	</div>
+	<br><br>
+	<h2>Example 3 - English Jewish Calendar</h2>
+	<div style="width:50%; display:inline-block;">
+		<div id="my_calendar_jewish_en"></div>
+	</div>
+	<br><br>
+	<h2>Example 4 - Hebrew Jewish Calendar</h2>
+	<div style="width:50%;display:inline-block;">
+		<div id="my_calendar_jewish_he"></div>
+	</div>	
+</div>
+
+<script type="text/javascript">
+$(window).load( function() {
+	$('#my_calendar_greg_en').jcal({
+		cal:'gre', /*jewish or gre(gregorian)*/
+		lang: 'en', /*he (hebrew) or en(english)*/
+		url: 'events_greg_en.json',
+		dataType: 'json',
+		eventNum: '3',
+		buttons: false,
+		jQueryui: false,
+		timeFormat: '24h',
+		monthToView: ['11','2016']
+	});
+	$('#my_calendar_greg_he').jcal({
+		cal:'gre', /*jewish or gre(gregorian)*/
+		lang: 'he', /*he (hebrew) or en(english)*/
+		url: 'events_greg_he.json',
+		dataType: 'json',
+		eventNum: '2',
+		buttons: false,
+		jQueryui: true,
+		timeFormat: '24h',
+		monthToView: ['11','2016']
+	});
+	$('#my_calendar_jewish_en').jcal({
+		cal:'jewish', /*jewish or gre(gregorian)*/
+		lang: 'en', /*he (hebrew) or en(english)*/
+		url: 'events_jewish_en.json',
+		dataType: 'json',
+		eventNum: '2',
+		buttons: true,
+		jQueryui: true,
+		timeFormat: '24h',
+		monthToView: ['03','5777']
+	});
+	$('#my_calendar_jewish_he').jcal({
+		cal:'jewish', /*jewish or gre(gregorian)*/
+		lang: 'he', /*he (hebrew) or en(english)*/
+		url: 'events_jewish_he.json',
+		dataType: 'json',
+		eventNum: '2',
+		buttons: false,
+		jQueryui: false,
+		timeFormat: '24h',
+		monthToView: ['03','5777']
+	});	
+});
+</script>
 </body>
 </html>
