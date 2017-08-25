@@ -1,6 +1,6 @@
 /**
  * pptxjs.js
- * Ver. : 1.0.1
+ * Ver. : 1.0.3
  * Author: meshesha , https://github.com/meshesha
  * LICENSE: MIT
  * url:https://github.com/meshesha/PPTXjs
@@ -39,7 +39,7 @@
         var slideLayoutClrOvride = "";
 
         var chartID = 0;
-
+        var _order = 1;
         var titleFontSize = 42;
         var bodyFontSize = 20;
         var otherFontSize = 16;
@@ -220,7 +220,6 @@
                 }
             }
         }
-        ///////////////////////////////////From worker.js file ////////////////////////////////////////////////////////////////////////////////        
         function processPPTX(zip) {
             var post_ary = [];
             var dateBefore = new Date();
@@ -537,7 +536,7 @@
                 case "p:graphicFrame":    // Chart, Diagram, Table
                     result = processGraphicFrameNode(nodeValue, warpObj);
                     break;
-                case "p:grpSp":    // 群組
+                case "p:grpSp":    
                     result = processGroupSpNode(nodeValue, warpObj);
                     break;
                 default:
@@ -595,11 +594,11 @@
             *  966 </xsd:complexType>
             */
             
-            var id = node["p:nvSpPr"]["p:cNvPr"]["attrs"]["id"];
-            var name = node["p:nvSpPr"]["p:cNvPr"]["attrs"]["name"];
-            var idx = (node["p:nvSpPr"]["p:nvPr"]["p:ph"] === undefined) ? undefined : node["p:nvSpPr"]["p:nvPr"]["p:ph"]["attrs"]["idx"];
-            var type = (node["p:nvSpPr"]["p:nvPr"]["p:ph"] === undefined) ? undefined : node["p:nvSpPr"]["p:nvPr"]["p:ph"]["attrs"]["type"];
-            var order = node["attrs"]["order"];
+            var id = getTextByPathList(node, ["p:nvSpPr","p:cNvPr","attrs","id"]);
+            var name = getTextByPathList(node, ["p:nvSpPr","p:cNvPr","attrs","name"]);
+            var idx = (getTextByPathList(node, ["p:nvSpPr","p:nvPr","p:ph"]) === undefined) ? undefined : getTextByPathList(node, ["p:nvSpPr","p:nvPr","p:ph","attrs","idx"]);
+            var type = (getTextByPathList(node, ["p:nvSpPr","p:nvPr","p:ph"]) === undefined) ? undefined : getTextByPathList(node, ["p:nvSpPr","p:nvPr","p:ph","attrs","type"]);
+            var order = getTextByPathList(node, ["attrs","order"]);
             
             var slideLayoutSpNode = undefined;
             var slideMasterSpNode = undefined;
@@ -666,6 +665,16 @@
             //rotate
             var rotate = angleToDegrees(getTextByPathList(slideXfrmNode, ["attrs", "rot"]));
             //console.log("rotate: "+rotate);
+            var txtRotate;
+            var txtXframeNode = getTextByPathList(node, ["p:txXfrm"]);
+            if (txtXframeNode !== undefined){
+                var txtXframeRot =  getTextByPathList(txtXframeNode,["attrs","rot"]);
+                if (txtXframeRot !== undefined){
+                    txtRotate = angleToDegrees(txtXframeRot)+90;
+                }else{
+                    txtRotate = rotate;
+                }
+            }
             //////////////////////////////////////////////////
             if (shapType !== undefined || custShapType !== undefined) {
                 var off = getTextByPathList(slideXfrmNode, ["a:off", "attrs"]);
@@ -845,7 +854,6 @@
                     case "snip2SameRect":
                     case "snipRoundRect":
                     case "squareTabs":
-
                     case "sun":
                     case "teardrop":
                     case "upArrowCallout":
@@ -1272,12 +1280,12 @@
                             getPosition(slideXfrmNode, slideLayoutXfrmNode, slideMasterXfrmNode) + 
                             getSize(slideXfrmNode, slideLayoutXfrmNode, slideMasterXfrmNode) + 
                             " z-index: " + order + ";" +
-                            "transform: rotate(" +rotate+ "deg);"+
+                            "transform: rotate(" +txtRotate+ "deg);"+
                         "'>";
                 
                 // TextBody
                 if (node["p:txBody"] !== undefined) {
-                    result += genTextBody(node["p:txBody"], slideLayoutSpNode, slideMasterSpNode, type, warpObj);
+                    result += genTextBody(node["p:txBody"], node, slideLayoutSpNode, slideMasterSpNode, type, warpObj);
                 }
                 result += "</div>";
             }else if(custShapType !== undefined){
@@ -1395,12 +1403,12 @@
                             getPosition(slideXfrmNode, slideLayoutXfrmNode, slideMasterXfrmNode) + 
                             getSize(slideXfrmNode, slideLayoutXfrmNode, slideMasterXfrmNode) + 
                             " z-index: " + order + ";" +
-                            "transform: rotate(" +rotate+ "deg);"+
+                            "transform: rotate(" +txtRotate+ "deg);"+
                         "'>";
                 
                 // TextBody
                 if (node["p:txBody"] !== undefined) {
-                    result += genTextBody(node["p:txBody"], slideLayoutSpNode, slideMasterSpNode, type, warpObj);
+                    result += genTextBody(node["p:txBody"], node, slideLayoutSpNode, slideMasterSpNode, type, warpObj);
                 }
                 result += "</div>";
 
@@ -1415,12 +1423,12 @@
                             getBorder(node, false) +
                             getShapeFill(node, false,warpObj) +
                             " z-index: " + order + ";" +
-                            "transform: rotate(" +rotate+ "deg);"+
+                            "transform: rotate(" +txtRotate+ "deg);"+
                         "'>";
                 
                 // TextBody
                 if (node["p:txBody"] !== undefined) {
-                    result += genTextBody(node["p:txBody"], slideLayoutSpNode, slideMasterSpNode, type, warpObj);
+                    result += genTextBody(node["p:txBody"], node, slideLayoutSpNode, slideMasterSpNode, type, warpObj);
                 }
                 result += "</div>";
                 
@@ -1523,7 +1531,7 @@
             // TODO:
         }
 
-        function genTextBody(textBodyNode, slideLayoutSpNode, slideMasterSpNode, type, warpObj) {
+        function genTextBody(textBodyNode, spNode, slideLayoutSpNode, slideMasterSpNode, type, warpObj) {
 
 
             var text = "";
@@ -1546,15 +1554,15 @@
                     //rtlStr = "";//"dir='"+isRTL+"'";
 
                     text += "<div  class='" + getHorizontalAlign(pNode, slideLayoutSpNode, slideMasterSpNode, type, slideMasterTextStyles) + "'>";
-                    text += genBuChar(pNode, slideLayoutSpNode, slideMasterSpNode, type, warpObj);
+                    text += genBuChar(pNode, spNode, slideLayoutSpNode, slideMasterSpNode, type, warpObj);
 
                     if (rNode === undefined) {
                         // without r
-                        text += genSpanElement(pNode, slideLayoutSpNode, slideMasterSpNode, type, warpObj);
+                        text += genSpanElement(pNode, spNode, slideLayoutSpNode, slideMasterSpNode, type, warpObj);
                     } else if (rNode.constructor === Array) {
                         // with multi r
                         for (var j=0; j<rNode.length; j++) {
-                            text += genSpanElement(rNode[j], slideLayoutSpNode, slideMasterSpNode, type, warpObj);
+                            text += genSpanElement(rNode[j], spNode, slideLayoutSpNode, slideMasterSpNode, type, warpObj);
                             //////////////////Amir////////////
                             if(pNode["a:br"] !== undefined){
                                 text += "<br>";
@@ -1563,7 +1571,7 @@
                         }
                     } else {
                         // with one r
-                        text += genSpanElement(rNode, slideLayoutSpNode, slideMasterSpNode, type, warpObj);
+                        text += genSpanElement(rNode, spNode, slideLayoutSpNode, slideMasterSpNode, type, warpObj);
                     }
                     text += "</div>";
                 }
@@ -1576,14 +1584,14 @@
                 //rtlStr = "";//"dir='"+isRTL+"'";
 
                 text += "<div class='slide-prgrph " + getHorizontalAlign(pNode, slideLayoutSpNode, slideMasterSpNode, type, slideMasterTextStyles) + "'>";
-                text += genBuChar(pNode, slideLayoutSpNode, slideMasterSpNode, type, warpObj);
+                text += genBuChar(pNode, spNode, slideLayoutSpNode, slideMasterSpNode, type, warpObj);
                 if (rNode === undefined) {
                     // without r
-                    text += genSpanElement(pNode, slideLayoutSpNode, slideMasterSpNode, type, warpObj);
+                    text += genSpanElement(pNode, spNode, slideLayoutSpNode, slideMasterSpNode, type, warpObj);
                 } else if (rNode.constructor === Array) {
                     // with multi r
                     for (var j=0; j<rNode.length; j++) {
-                        text += genSpanElement(rNode[j], slideLayoutSpNode, slideMasterSpNode, type, warpObj);
+                        text += genSpanElement(rNode[j], spNode, slideLayoutSpNode, slideMasterSpNode, type, warpObj);
                         //////////////////Amir////////////
                         if(pNode["a:br"] !== undefined){
                             text += "<br>";
@@ -1592,7 +1600,7 @@
                     }
                 } else {
                     // with one r
-                    text += genSpanElement(rNode, slideLayoutSpNode, slideMasterSpNode, type, warpObj);
+                    text += genSpanElement(rNode, spNode, slideLayoutSpNode, slideMasterSpNode, type, warpObj);
                 }
                 text += "</div>";
             }
@@ -1600,17 +1608,20 @@
             return text;
         }
 
-        function genBuChar(node, slideLayoutSpNode, slideMasterSpNode, type, warpObj) {
+        function genBuChar(node, spNode, slideLayoutSpNode, slideMasterSpNode, type, warpObj) {
             ///////////////////////////////////////Amir///////////////////////////////
             var sldMstrTxtStyles = warpObj["slideMasterTextStyles"];
 
-            var rNode = node["a:r"];
+            var rNode = getTextByPathList(node,["a:r"]);
+            if(rNode !== undefined && rNode.constructor === Array){
+                rNode = rNode[0];
+            }
             var dfltBultColor,dfltBultSize,bultColor,bultSize;
             if (rNode !== undefined) {
-                dfltBultColor = getFontColor(rNode, type, sldMstrTxtStyles);
+                dfltBultColor = getFontColor(rNode, spNode, type, sldMstrTxtStyles);
                 dfltBultSize = getFontSize(rNode, slideLayoutSpNode, slideMasterSpNode, type, sldMstrTxtStyles);       
             }else{
-                dfltBultColor = getFontColor(node, type, sldMstrTxtStyles);
+                dfltBultColor = getFontColor(node, spNode, type, sldMstrTxtStyles);
                 dfltBultSize = getFontSize(node, slideLayoutSpNode, slideMasterSpNode, type, sldMstrTxtStyles);         
             }
             //console.log("Bullet Size: " + bultSize);
@@ -1657,7 +1668,7 @@
             //console.log("NumericTypr: " + buNum);
             //console.log("buChar: " + (buChar === undefined?'':buChar.charCodeAt(0)));
             //get definde bullet COLOR
-            var buClrNode = pPrNode["a:buClr"];
+            var buClrNode = getTextByPathList(pPrNode,["a:buClr"]);
             var defBultColor = "NoNe";
             if(buClrNode !== undefined){
                 defBultColor = getSolidFill(buClrNode);
@@ -1797,7 +1808,7 @@
             return bullet;
         }
 
-        function  genSpanElement(node, slideLayoutSpNode, slideMasterSpNode, type, warpObj) {
+        function  genSpanElement(node, spNode, slideLayoutSpNode, slideMasterSpNode, type, warpObj) {
             
             var slideMasterTextStyles = warpObj["slideMasterTextStyles"];
             
@@ -1810,7 +1821,7 @@
             }
             //console.log("genSpanElement: ",node)
             var styleText = 
-                "color:" + getFontColor(node, type, slideMasterTextStyles) + 
+                "color:" + getFontColor(node, spNode, type, slideMasterTextStyles) + 
                 ";font-size:" + getFontSize(node, slideLayoutSpNode, slideMasterSpNode, type, slideMasterTextStyles) + 
                 ";font-family:" + getFontType(node, type, slideMasterTextStyles) + 
                 ";font-weight:" + getFontBold(node, type, slideMasterTextStyles) + 
@@ -2030,7 +2041,7 @@
                     
                     if (tcNodes.constructor === Array) {
                         for (var j=0; j<tcNodes.length; j++) {
-                            var text = genTextBody(tcNodes[j]["a:txBody"], undefined, undefined, undefined, warpObj);        
+                            var text = genTextBody(tcNodes[j]["a:txBody"], node, undefined, undefined, undefined, warpObj);        
                             var rowSpan = getTextByPathList(tcNodes[j], ["attrs", "rowSpan"]);
                             var colSpan = getTextByPathList(tcNodes[j], ["attrs", "gridSpan"]);
                             var vMerge = getTextByPathList(tcNodes[j], ["attrs", "vMerge"]);
@@ -2277,11 +2288,69 @@
         }
 
         function genDiagram(node, warpObj) {
+            //console.log(warpObj)
+            //readXmlFile(zip, sldFileName)
+            /**files define the diagram:
+             * 1-colors#.xml,
+             * 2-data#.xml, 
+             * 3-layout#.xml,
+             * 4-quickStyle#.xml.
+             * 5-drawing#.xml, which Microsoft added as an extension for persisting diagram layout information.
+             */
+            ///get colors#.xml, data#.xml , layout#.xml , quickStyle#.xml
             var order = node["attrs"]["order"];
+            var zip = warpObj["zip"];
             var xfrmNode = getTextByPathList(node, ["p:xfrm"]);
-            return "<div class='block content' style='border: 1px dotted;" + 
-                        getPosition(xfrmNode, undefined, undefined) + getSize(xfrmNode, undefined, undefined) + 
-                    "'>TODO: diagram</div>";
+            var dgmRelIds = getTextByPathList(node, ["a:graphic","a:graphicData","dgm:relIds","attrs"]);
+             //console.log(dgmRelIds)
+            var dgmClrFileId = dgmRelIds["r:cs"];
+            var dgmDataFileId = dgmRelIds["r:dm"];
+            var dgmLayoutFileId = dgmRelIds["r:lo"];
+            var dgmQuickStyleFileId = dgmRelIds["r:qs"];
+            var dgmClrFileName = warpObj["slideResObj"][dgmClrFileId].target,
+                dgmDataFileName = warpObj["slideResObj"][dgmDataFileId].target,
+                dgmLayoutFileName = warpObj["slideResObj"][dgmLayoutFileId].target;
+                dgmQuickStyleFileName = warpObj["slideResObj"][dgmQuickStyleFileId].target;
+            //console.log(dgmClrFileName,"\n",dgmDataFileName,"\n",dgmLayoutFileName,"\n",dgmQuickStyleFileName);
+            var dgmClr = readXmlFile(zip, dgmClrFileName);
+            var dgmData = readXmlFile(zip, dgmDataFileName);
+            var dgmLayout = readXmlFile(zip, dgmLayoutFileName);
+            var dgmQuickStyle = readXmlFile(zip, dgmQuickStyleFileName);
+            //console.log(dgmClr,dgmData,dgmLayout,dgmQuickStyle)
+             ///get drawing#.xml
+             var dgmDrwFileName = "";
+             var dataModelExt = getTextByPathList(dgmData, ["dgm:dataModel","dgm:extLst","a:ext","dsp:dataModelExt","attrs"]);
+            if(dataModelExt !== undefined){
+                var dgmDrwFileId = dataModelExt["relId"];
+                dgmDrwFileName =  warpObj["slideResObj"][dgmDrwFileId]["target"];
+            }
+            //console.log("dgmDrwFileName: ",dgmDrwFileName);
+            var dgmDrwFile = "";
+            if(dgmDrwFileName != ""){
+                dgmDrwFile =  readXmlFile(zip, dgmDrwFileName);
+            }
+            //console.log("dgmDrwFile: ",dgmDrwFile);
+            //processSpNode(node, warpObj)
+            var dgmDrwSpArray = getTextByPathList(dgmDrwFile,["dsp:drawing","dsp:spTree","dsp:sp"]);
+            var rslt="";
+            if(dgmDrwSpArray !== undefined){
+                var dgmDrwSpArrayLen = dgmDrwSpArray.length;
+                for(var i=0;i<dgmDrwSpArrayLen;i++){
+                    var dspSp = dgmDrwSpArray[i];
+                    var dspSpObjToStr = JSON.stringify(dspSp);
+                    var pSpStr = dspSpObjToStr.replace(/dsp:/g,"p:");
+                    var pSpStrToObj = JSON.parse(pSpStr);
+                    //console.log("pSpStrToObj["+i+"]: ",pSpStrToObj);
+                    rslt += processSpNode(pSpStrToObj, warpObj)
+                    //console.log("rslt["+i+"]: ",rslt);
+                }
+                // dgmDrwFile: "dsp:"-> "p:"
+            }
+
+            return "<div class='block content' style='" + 
+                        getPosition(xfrmNode, undefined, undefined) + 
+                        getSize(xfrmNode, undefined, undefined) + 
+                    "'>"+rslt+"</div>";
         }
 
         function getPosition(slideSpNode, slideLayoutSpNode, slideMasterSpNode) {
@@ -2392,10 +2461,18 @@
             return (typeface === undefined) ? "inherit" : typeface;
         }
 
-        function getFontColor(node, type, slideMasterTextStyles) {
+        function getFontColor(node, spNode, type, slideMasterTextStyles) {
             var solidFillNode = getTextByPathStr(node, "a:rPr a:solidFill");
-            //console.log(node,solidFillNode)
-            var color =   getSolidFill(solidFillNode);
+            var color;
+            if(solidFillNode === undefined){
+                var sPstyle = getTextByPathList(spNode, ["p:style","a:fontRef"]);
+                if(sPstyle !== undefined){
+                    color = getSolidFill(sPstyle);
+                }
+            }else{
+                color =   getSolidFill(solidFillNode);
+            }
+            
             //console.log(themeContent)
             //var schemeClr = getTextByPathList(buClrNode ,["a:schemeClr", "attrs","val"]);
             return (color === undefined || color === "FFF") ? "#000" : "#" + color;
@@ -3574,11 +3651,6 @@
             ptrn += '</pattern>';
             return ptrn;
         }
-        ////////////////////////////////////////End worke.js file ////////////////////////////////////////////////////////////////////////////////////////////        
-        
- 		//$("#to-reveal-btn").click(function () {
-
-       //});
         
         function processMsgQueue(queue) {
             for (var i=0; i<queue.length; i++) {
@@ -3817,7 +3889,666 @@
             }
             return aNum;
         }
- 
+        function base64ArrayBuffer(arrayBuffer) {
+            var base64    = '';
+            var encodings = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+            var bytes         = new Uint8Array(arrayBuffer);
+            var byteLength    = bytes.byteLength;
+            var byteRemainder = byteLength % 3;
+            var mainLength    = byteLength - byteRemainder;
+        
+            var a, b, c, d;
+            var chunk;
+        
+            for (var i = 0; i < mainLength; i = i + 3) {
+                chunk = (bytes[i] << 16) | (bytes[i + 1] << 8) | bytes[i + 2];
+                a = (chunk & 16515072) >> 18;
+                b = (chunk & 258048)   >> 12;
+                c = (chunk & 4032)     >>  6;
+                d = chunk & 63;
+                base64 += encodings[a] + encodings[b] + encodings[c] + encodings[d];
+            }
+        
+            if (byteRemainder == 1) {
+                chunk = bytes[mainLength];
+                a = (chunk & 252) >> 2;
+                b = (chunk & 3)   << 4;
+                base64 += encodings[a] + encodings[b] + '==';
+            } else if (byteRemainder == 2) {
+                chunk = (bytes[mainLength] << 8) | bytes[mainLength + 1];
+                a = (chunk & 64512) >> 10;
+                b = (chunk & 1008)  >>  4;
+                c = (chunk & 15)    <<  2;
+                base64 += encodings[a] + encodings[b] + encodings[c] + '=';
+            }
+        
+            return base64;
+        }
+        
+        function extractFileExtension(filename) {
+            return filename.substr((~-filename.lastIndexOf(".") >>> 0) + 2);
+        }
+        
+        function escapeHtml(text) {
+            var map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+        }
+        /////////////////////////////////////tXml///////////////////////////
+        function tXml(S) {
+            
+            "use strict";
+            var openBracket = "<";
+            var openBracketCC = "<".charCodeAt(0);
+            var closeBracket = ">";
+            var closeBracketCC = ">".charCodeAt(0);
+            var minus = "-";
+            var minusCC = "-".charCodeAt(0);
+            var slash = "/";
+            var slashCC = "/".charCodeAt(0);
+            var exclamation = '!';
+            var exclamationCC = '!'.charCodeAt(0);
+            var singleQuote = "'";
+            var singleQuoteCC = "'".charCodeAt(0);
+            var doubleQuote = '"';
+            var doubleQuoteCC = '"'.charCodeAt(0);
+            var questionMark = '?';
+            var questionMarkCC = '?'.charCodeAt(0);
+            
+            /**
+             *    returns text until the first nonAlphebetic letter
+             */
+            var nameSpacer = "\r\n\t>/= ";
+            
+            var pos = 0;
+            
+            /**
+             * Parsing a list of entries
+             */
+            function parseChildren() {
+                var children = [];
+                while (S[pos]) {
+                    if (S.charCodeAt(pos) == openBracketCC) {
+                        if (S.charCodeAt(pos+1) === slashCC) { // </
+                            //while (S[pos]!=='>') { pos++; }
+                            pos = S.indexOf(closeBracket, pos);
+                            return children;
+                        } else if (S.charCodeAt(pos+1) === exclamationCC) { // <! or <!--
+                            if (S.charCodeAt(pos+2) == minusCC) {
+                                // comment support
+                                while (!(S.charCodeAt(pos) === closeBracketCC && S.charCodeAt(pos-1) == minusCC && 
+                                        S.charCodeAt(pos-2) == minusCC && pos != -1)) {
+                                    pos = S.indexOf(closeBracket, pos+1);
+                                }
+                                if (pos === -1) {
+                                    pos = S.length;
+                                }
+                            } else {
+                                // doctype support
+                                pos += 2;
+                                for (; S.charCodeAt(pos) !== closeBracketCC; pos++) {}
+                            }
+                            pos++;
+                            continue;
+                        } else if (S.charCodeAt(pos+1) === questionMarkCC) { // <?
+                            // XML header support
+                            pos = S.indexOf(closeBracket, pos);
+                            pos++;
+                            continue;
+                        }
+                        pos++;
+                        var startNamePos = pos;
+                        for (; nameSpacer.indexOf(S[pos]) === -1; pos++) {}
+                        var node_tagName = S.slice(startNamePos, pos);
+        
+                        // Parsing attributes
+                        var attrFound = false;
+                        var node_attributes = {};
+                        for (; S.charCodeAt(pos) !== closeBracketCC; pos++) {
+                            var c = S.charCodeAt(pos);
+                            if ((c > 64 && c < 91) || (c > 96 && c < 123)) {
+                                startNamePos = pos;
+                                for (; nameSpacer.indexOf(S[pos]) === -1; pos++) {}
+                                var name = S.slice(startNamePos, pos);
+                                // search beginning of the string
+                                var code = S.charCodeAt(pos);
+                                while (code !== singleQuoteCC && code !== doubleQuoteCC) {
+                                    pos++;
+                                    code = S.charCodeAt(pos);
+                                }
+                                
+                                var startChar = S[pos];
+                                var startStringPos= ++pos;
+                                pos = S.indexOf(startChar, startStringPos);
+                                var value = S.slice(startStringPos, pos);
+                                if (!attrFound) {
+                                    node_attributes = {};
+                                    attrFound = true;
+                                }
+                                node_attributes[name] = value;
+                            }
+                        }
+                        
+                        // Optional parsing of children
+                        if (S.charCodeAt(pos-1) !== slashCC) {
+                            pos++;
+                            var node_children = parseChildren();
+                        }
+                        
+                        children.push({
+                            "children": node_children,
+                            "tagName": node_tagName,
+                            "attrs": node_attributes
+                        });
+                        
+                    } else {
+                        var startTextPos = pos;
+                        pos = S.indexOf(openBracket, pos) - 1; // Skip characters until '<'
+                        if (pos === -2) {
+                            pos = S.length;
+                        }
+                        var text = S.slice(startTextPos, pos + 1);
+                        if (text.trim().length > 0) {
+                            children.push(text);
+                        }
+                    }
+                    pos++;
+                }
+                return children;
+            }
+            
+            _order = 1;
+            return simplefy(parseChildren());
+        }
+        
+        function simplefy(children) {
+            var node = {};
+            
+            if (children === undefined) {
+                return {};
+            }
+            
+            // Text node (e.g. <t>This is text.</t>)
+            if (children.length === 1 && typeof children[0] == 'string') {
+                return children[0];
+            }
+        
+            // map each object
+            children.forEach(function (child) {
+        
+                if (!node[child.tagName]) {
+                    node[child.tagName] = [];
+                }
+        
+                if (typeof child === 'object') {
+                    var kids = simplefy(child.children);
+                    if (child.attrs) {
+                        kids.attrs = child.attrs;
+                    }
+                    
+                    if (kids["attrs"] === undefined) {
+                        kids["attrs"] = {"order": _order};
+                    } else {
+                        kids["attrs"]["order"] = _order;
+                    }
+                    _order++;
+                    node[child.tagName].push(kids);
+                }
+            });
+            
+            for (var i in node) {
+                if (node[i].length == 1) {
+                    node[i] = node[i][0];
+                }
+            }
+            
+            return node;
+        };
     };
 
+    /*!
+    JSZipUtils - A collection of cross-browser utilities to go along with JSZip.
+    <http://stuk.github.io/jszip-utils>
+    (c) 2014 Stuart Knightley, David Duponchel
+    Dual licenced under the MIT license or GPLv3. See https://raw.github.com/Stuk/jszip-utils/master/LICENSE.markdown.
+    */
+    !function(a){"object"==typeof exports?module.exports=a():"function"==typeof define&&define.amd?define(a):"undefined"!=typeof window?window.JSZipUtils=a():"undefined"!=typeof global?global.JSZipUtils=a():"undefined"!=typeof self&&(self.JSZipUtils=a())}(function(){return function a(b,c,d){function e(g,h){if(!c[g]){if(!b[g]){var i="function"==typeof require&&require;if(!h&&i)return i(g,!0);if(f)return f(g,!0);throw new Error("Cannot find module '"+g+"'")}var j=c[g]={exports:{}};b[g][0].call(j.exports,function(a){var c=b[g][1][a];return e(c?c:a)},j,j.exports,a,b,c,d)}return c[g].exports}for(var f="function"==typeof require&&require,g=0;g<d.length;g++)e(d[g]);return e}({1:[function(a,b){"use strict";function c(){try{return new window.XMLHttpRequest}catch(a){}}function d(){try{return new window.ActiveXObject("Microsoft.XMLHTTP")}catch(a){}}var e={};e._getBinaryFromXHR=function(a){return a.response||a.responseText};var f=window.ActiveXObject?function(){return c()||d()}:c;e.getBinaryContent=function(a,b){try{var c=f();c.open("GET",a,!0),"responseType"in c&&(c.responseType="arraybuffer"),c.overrideMimeType&&c.overrideMimeType("text/plain; charset=x-user-defined"),c.onreadystatechange=function(){var d,f;if(4===c.readyState)if(200===c.status||0===c.status){d=null,f=null;try{d=e._getBinaryFromXHR(c)}catch(g){f=new Error(g)}b(f,d)}else b(new Error("Ajax error for "+a+" : "+this.status+" "+this.statusText),null)},c.send()}catch(d){b(new Error(d),null)}},b.exports=e},{}]},{},[1])(1)});                
+    
+    /**
+     * Colorz (or Colz) is a Javascript "library" to help
+     * in color conversion between the usual color-spaces
+     * Hex - Rgb - Hsl / Hsv - Hsb
+     *
+     * It provides some helpers to output Canvas / CSS
+     * color strings.
+     *
+     * by Carlos Cabo 2013
+     * http://carloscabo.com
+     *
+     * Some formulas borrowed from Wikipedia or other authors.
+    */
+
+    (function(name, definition) {
+        if (typeof define === "function") {
+        define(definition);
+        } else if (typeof module !== "undefined" && module.exports) {
+        module.exports = definition();
+        } else {
+        var theModule = definition(),
+            global = this,
+            old = global[name];
+        theModule.noConflict = function() {
+            global[name] = old;
+            return theModule;
+        };
+        global[name] = theModule;
+        }
+    })("colz", function() {
+        var round = Math.round,
+        toString = "toString",
+        colz = colz || {},
+        Rgb,
+        Rgba,
+        Hsl,
+        Hsla,
+        Color,
+        ColorScheme,
+        hexToRgb,
+        componentToHex,
+        rgbToHex,
+        rgbToHsl,
+        hue2rgb,
+        hslToRgb,
+        rgbToHsb,
+        hsbToRgb,
+        hsbToHsl,
+        hsvToHsl,
+        hsvToRgb,
+        randomColor;
+        Rgb = colz.Rgb = function(col) {
+        this.r = col[0];
+        this.g = col[1];
+        this.b = col[2];
+        };
+        Rgb.prototype[toString] = function() {
+        return "rgb(" + this.r + "," + this.g + "," + this.b + ")";
+        };
+        Rgba = colz.Rgba = function(col) {
+        this.r = col[0];
+        this.g = col[1];
+        this.b = col[2];
+        this.a = col[3];
+        };
+        Rgba.prototype[toString] = function() {
+        return (
+            "rgba(" + this.r + "," + this.g + "," + this.b + "," + this.a + ")"
+        );
+        };
+        Hsl = colz.Hsl = function(col) {
+        this.h = col[0];
+        this.s = col[1];
+        this.l = col[2];
+        };
+        Hsl.prototype[toString] = function() {
+        return "hsl(" + this.h + "," + this.s + "%," + this.l + "%)";
+        };
+        Hsla = colz.Hsla = function(col) {
+        this.h = col[0];
+        this.s = col[1];
+        this.l = col[2];
+        this.a = col[3];
+        };
+        Hsla.prototype[toString] = function() {
+        return (
+            "hsla(" + this.h + "," + this.s + "%," + this.l + "%," + this.a + ")"
+        );
+        };
+        Color = colz.Color = function() {
+        this.hex = this.r = this.g = this.b = this.h = this.s = this.l = this.a = this.hsl = this.hsla = this.rgb = this.rgba = null;
+        this.init(arguments);
+        };
+        var colorPrototype = Color.prototype;
+        colorPrototype.init = function(arg) {
+        var _this = this;
+        if (typeof arg[0] === "string") {
+            if (arg[0].charAt(0) !== "#") {
+            arg[0] = "#" + arg[0];
+            }
+            if (arg[0].length < 7) {
+            arg[0] =
+                "#" +
+                arg[0][1] +
+                arg[0][1] +
+                arg[0][2] +
+                arg[0][2] +
+                arg[0][3] +
+                arg[0][3];
+            }
+            _this.hex = arg[0].toLowerCase();
+            _this.rgb = new Rgb(hexToRgb(_this.hex));
+            _this.r = _this.rgb.r;
+            _this.g = _this.rgb.g;
+            _this.b = _this.rgb.b;
+            _this.a = 1;
+            _this.rgba = new Rgba([_this.r, _this.g, _this.b, _this.a]);
+        }
+        if (typeof arg[0] === "number") {
+            _this.r = arg[0];
+            _this.g = arg[1];
+            _this.b = arg[2];
+            if (typeof arg[3] === "undefined") {
+            _this.a = 1;
+            } else {
+            _this.a = arg[3];
+            }
+            _this.rgb = new Rgb([_this.r, _this.g, _this.b]);
+            _this.rgba = new Rgba([_this.r, _this.g, _this.b, _this.a]);
+            _this.hex = rgbToHex([_this.r, _this.g, _this.b]);
+        }
+        if (arg[0] instanceof Array) {
+            _this.r = arg[0][0];
+            _this.g = arg[0][1];
+            _this.b = arg[0][2];
+            if (typeof arg[0][3] === "undefined") {
+            _this.a = 1;
+            } else {
+            _this.a = arg[0][3];
+            }
+            _this.rgb = new Rgb([_this.r, _this.g, _this.b]);
+            _this.rgba = new Rgba([_this.r, _this.g, _this.b, _this.a]);
+            _this.hex = rgbToHex([_this.r, _this.g, _this.b]);
+        }
+        _this.hsl = new Hsl(colz.rgbToHsl([_this.r, _this.g, _this.b]));
+        _this.h = _this.hsl.h;
+        _this.s = _this.hsl.s;
+        _this.l = _this.hsl.l;
+        _this.hsla = new Hsla([_this.h, _this.s, _this.l, _this.a]);
+        };
+        colorPrototype.setHue = function(newhue) {
+        var _this = this;
+        _this.h = newhue;
+        _this.hsl.h = newhue;
+        _this.hsla.h = newhue;
+        _this.updateFromHsl();
+        };
+        colorPrototype.setSat = function(newsat) {
+        var _this = this;
+        _this.s = newsat;
+        _this.hsl.s = newsat;
+        _this.hsla.s = newsat;
+        _this.updateFromHsl();
+        };
+        colorPrototype.setLum = function(newlum) {
+        var _this = this;
+        _this.l = newlum;
+        _this.hsl.l = newlum;
+        _this.hsla.l = newlum;
+        _this.updateFromHsl();
+        };
+        colorPrototype.setAlpha = function(newalpha) {
+        this.a = newalpha;
+        this.hsla.a = newalpha;
+        this.rgba.a = newalpha;
+        };
+        colorPrototype.updateFromHsl = function() {
+        this.rgb = null;
+        this.rgb = new Rgb(colz.hslToRgb([this.h, this.s, this.l]));
+        this.r = this.rgb.r;
+        this.g = this.rgb.g;
+        this.b = this.rgb.b;
+        this.rgba.r = this.rgb.r;
+        this.rgba.g = this.rgb.g;
+        this.rgba.b = this.rgb.b;
+        this.hex = null;
+        this.hex = rgbToHex([this.r, this.g, this.b]);
+        };
+        randomColor = colz.randomColor = function() {
+        var r = "#" + Math.random().toString(16).slice(2, 8);
+        return new Color(r);
+        };
+        hexToRgb = colz.hexToRgb = function(hex) {
+        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result
+            ? [
+                parseInt(result[1], 16),
+                parseInt(result[2], 16),
+                parseInt(result[3], 16)
+            ]
+            : null;
+        };
+        componentToHex = colz.componentToHex = function(c) {
+        var hex = c.toString(16);
+        return hex.length === 1 ? "0" + hex : hex;
+        };
+        rgbToHex = colz.rgbToHex = function() {
+        var arg, r, g, b;
+        arg = arguments;
+        if (arg.length > 1) {
+            r = arg[0];
+            g = arg[1];
+            b = arg[2];
+        } else {
+            r = arg[0][0];
+            g = arg[0][1];
+            b = arg[0][2];
+        }
+        return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+        };
+        rgbToHsl = colz.rgbToHsl = function() {
+        var arg, r, g, b, h, s, l, d, max, min;
+        arg = arguments;
+        if (typeof arg[0] === "number") {
+            r = arg[0];
+            g = arg[1];
+            b = arg[2];
+        } else {
+            r = arg[0][0];
+            g = arg[0][1];
+            b = arg[0][2];
+        }
+        r /= 255;
+        g /= 255;
+        b /= 255;
+        max = Math.max(r, g, b);
+        min = Math.min(r, g, b);
+        l = (max + min) / 2;
+        if (max === min) {
+            h = s = 0;
+        } else {
+            d = max - min;
+            s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+            switch (max) {
+            case r:
+                h = (g - b) / d + (g < b ? 6 : 0);
+                break;
+            case g:
+                h = (b - r) / d + 2;
+                break;
+            case b:
+                h = (r - g) / d + 4;
+                break;
+            }
+            h /= 6;
+        }
+        h = round(h * 360);
+        s = round(s * 100);
+        l = round(l * 100);
+        return [h, s, l];
+        };
+        hue2rgb = colz.hue2rgb = function(p, q, t) {
+        if (t < 0) {
+            t += 1;
+        }
+        if (t > 1) {
+            t -= 1;
+        }
+        if (t < 1 / 6) {
+            return p + (q - p) * 6 * t;
+        }
+        if (t < 1 / 2) {
+            return q;
+        }
+        if (t < 2 / 3) {
+            return p + (q - p) * (2 / 3 - t) * 6;
+        }
+        return p;
+        };
+        hslToRgb = colz.hslToRgb = function() {
+        var arg, r, g, b, h, s, l, q, p;
+        arg = arguments;
+        if (typeof arg[0] === "number") {
+            h = arg[0] / 360;
+            s = arg[1] / 100;
+            l = arg[2] / 100;
+        } else {
+            h = arg[0][0] / 360;
+            s = arg[0][1] / 100;
+            l = arg[0][2] / 100;
+        }
+        if (s === 0) {
+            r = g = b = l;
+        } else {
+            q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+            p = 2 * l - q;
+            r = colz.hue2rgb(p, q, h + 1 / 3);
+            g = colz.hue2rgb(p, q, h);
+            b = colz.hue2rgb(p, q, h - 1 / 3);
+        }
+        return [round(r * 255), round(g * 255), round(b * 255)];
+        };
+        rgbToHsb = colz.rgbToHsb = function(r, g, b) {
+        var max, min, h, s, v, d;
+        r = r / 255;
+        g = g / 255;
+        b = b / 255;
+        max = Math.max(r, g, b);
+        min = Math.min(r, g, b);
+        v = max;
+        d = max - min;
+        s = max === 0 ? 0 : d / max;
+        if (max === min) {
+            h = 0;
+        } else {
+            switch (max) {
+            case r:
+                h = (g - b) / d + (g < b ? 6 : 0);
+                break;
+            case g:
+                h = (b - r) / d + 2;
+                break;
+            case b:
+                h = (r - g) / d + 4;
+                break;
+            }
+            h /= 6;
+        }
+        h = round(h * 360);
+        s = round(s * 100);
+        v = round(v * 100);
+        return [h, s, v];
+        };
+        hsbToRgb = colz.hsbToRgb = function(h, s, v) {
+        var r, g, b, i, f, p, q, t;
+        if (v === 0) {
+            return [0, 0, 0];
+        }
+        s = s / 100;
+        v = v / 100;
+        h = h / 60;
+        i = Math.floor(h);
+        f = h - i;
+        p = v * (1 - s);
+        q = v * (1 - s * f);
+        t = v * (1 - s * (1 - f));
+        if (i === 0) {
+            r = v;
+            g = t;
+            b = p;
+        } else if (i === 1) {
+            r = q;
+            g = v;
+            b = p;
+        } else if (i === 2) {
+            r = p;
+            g = v;
+            b = t;
+        } else if (i === 3) {
+            r = p;
+            g = q;
+            b = v;
+        } else if (i === 4) {
+            r = t;
+            g = p;
+            b = v;
+        } else if (i === 5) {
+            r = v;
+            g = p;
+            b = q;
+        }
+        r = Math.floor(r * 255);
+        g = Math.floor(g * 255);
+        b = Math.floor(b * 255);
+        return [r, g, b];
+        };
+        hsbToHsl = colz.hsbToHsl = function(h, s, b) {
+        return colz.rgbToHsl(colz.hsbToRgb(h, s, b));
+        };
+        hsvToHsl = colz.hsvToHsl = colz.hsbToHsl;
+        hsvToRgb = colz.hsvToRgb = colz.hsbToRgb;
+        ColorScheme = colz.ColorScheme = function(color_val, angle_array) {
+        this.palette = [];
+        if (angle_array === undefined && color_val instanceof Array) {
+            this.createFromColors(color_val);
+        } else {
+            this.createFromAngles(color_val, angle_array);
+        }
+        };
+        var colorSchemePrototype = ColorScheme.prototype;
+        colorSchemePrototype.createFromColors = function(color_val) {
+        for (var i in color_val) {
+            if (color_val.hasOwnProperty(i)) {
+            this.palette.push(new Color(color_val[i]));
+            }
+        }
+        return this.palette;
+        };
+        colorSchemePrototype.createFromAngles = function(color_val, angle_array) {
+        this.palette.push(new Color(color_val));
+        for (var i in angle_array) {
+            if (angle_array.hasOwnProperty(i)) {
+            var tempHue = (this.palette[0].h + angle_array[i]) % 360;
+            this.palette.push(
+                new Color(
+                colz.hslToRgb([tempHue, this.palette[0].s, this.palette[0].l])
+                )
+            );
+            }
+        }
+        return this.palette;
+        };
+        ColorScheme.Compl = function(color_val) {
+        return new ColorScheme(color_val, [180]);
+        };
+        ColorScheme.Triad = function(color_val) {
+        return new ColorScheme(color_val, [120, 240]);
+        };
+        ColorScheme.Tetrad = function(color_val) {
+        return new ColorScheme(color_val, [60, 180, 240]);
+        };
+        ColorScheme.Analog = function(color_val) {
+        return new ColorScheme(color_val, [-45, 45]);
+        };
+        ColorScheme.Split = function(color_val) {
+        return new ColorScheme(color_val, [150, 210]);
+        };
+        ColorScheme.Accent = function(color_val) {
+        return new ColorScheme(color_val, [-45, 45, 180]);
+        };
+        return colz;
+    });
 }( jQuery ));
