@@ -9,87 +9,129 @@
 <script type="text/javascript" src="./tXml.min.js"></script>
 
 <style>
-	html, body { margin: 0; padding: 0; }
+	html, body { 
+		margin: 0;
+		padding: 0;
+		background: #eee url(cubes-powerpoint.jpg) ;
+		
+	}
+	#header { 
+		margin-right: auto; 
+		margin-left: auto; 
+		width: 800px; 
+	}
 	#header h1{
 		text-align: center;
+		width: 800px;
+		padding: 15px;
+		color: #605ED8;
+		background-color: #BAC0E2;
+		box-shadow: 10px 10px;
 	}
 	#warper {
   		display: flex;
 		padding: 20px;
 	}
 	#warper > div {
-		flex: 1; /*grow*/
-	}
-	#const_values_warper{
-		padding: 10px;
+		flex: 1; 
 	}
 	#const_values{
 		font-size: 12px;
 	}
+	#fmla_reslt{
+		color: #BBB8F0;
+		background: #272525;
+	}
+	#container{
+		font-size: 12px;
+	}
+	#footer {
+		text-align: center;
+		font-size: 10px;
+	}
+	.contents{
+		border-radius: 25px;
+		background: #FFFFFF;
+		border: 1px solid blue;
+		padding: 10px;
+	}
 </style>
 </head>
 <body>
-	<div id="header">
-		<h1>presetShapeDefinitions.xml</h1>
-	</div>
-	<div id="warper">
-		<div id="container">
-				
-			Enter Shape name: <input type="text" id="shape_name"> Or select : <select id="select_shape"><option value="no_shape"></option>></select><br>
-			<textarea rows="20" cols="100" id="fmla_reslt" readonly></textarea> 
+	<div id="main">
+		<div id="header">
+			<h1>presetShapeDefinitions.xml</h1>
 		</div>
-		<div id="const_values_warper">
-			<h2><u>Constants values:</u></h2>
-			<div id="const_values">
-				<span><i>h</i> - the height of the shape.</span><br>
-				<span><i>w</i> - the width of the shape.</span><br>
-				<table border="0">
-					<tr>
-						<td>
-							<span>l = 0 ;</span><br>
-							<span>t = 0 ;</span><br>
-							<span>b = h ;</span><br>
-							<span>r = w ;</span><br>
-							<span>hc = w/2 ;</span><br>
-							<span>vc = h/2 ;</span><br>
-							<span>hd2 = h/2 ;</span><br>
-							<span>hd3 = h/3 ;</span><br>
-							<span>hd4 = h/4 ;</span><br>
-							<span>hd5 = h/5 ;</span><br>
-							<span>hd6 = h/6 ;</span><br>
-							<span>hd8 = h/8 ;</span><br>
-							<span>wd2 = w/2 ;</span><br>
-							<span>wd3 = w/3 ;</span><br>
-							<span>wd4 = w/4 ;</span><br>
-							<span>wd5 = w/5 ;</span><br>
-							<span>wd6 = w/6 ;</span><br>
-							<span>wd8 = w/8 ;</span><br>
-							<span>wd10 = w/10 ;</span><br>
-						</td>
-						<td style="vertical-align:top">
-							<span>ls = max(w,h) ;</span><br>
-							<span>ss = min(w,h) ;</span><br>
-							<span>ssd2 = ss/2 ;</span><br>
-							<span>ssd4 = ss/4 ;</span><br>
-							<span>ssd6 = ss/6 ;</span><br>
-							<span>ssd8 = ss/8 ;</span><br>
-							<span>ssd16 = ss/16 ;</span><br>
-							<span>ssd32 = ss/32 ;</span><br><br>
-							<span>cd2 = 10800000; (180&deg;).</span><br>
-							<span>cd4 = 5400000; (90&deg;).</span><br>
-							<span>cd8 = 2700000; (45&deg;).</span><br>
-							<span>3cd4 = 16200000; (270&deg;).</span><br>
-							<span>3cd8 = 8100000; (135&deg;).</span><br>
-							<span>5cd8 = 13500000; (225&deg;).</span><br>
-							<span>7cd8 = 18900000; (315&deg;).</span><br>
-						</td>
-					</tr>
-					<tr>
-						<td>
+		<div id="warper">
+			<div id="left_container" class="contents">
+				<h3><u>Purpose:</u></h3>
+				<p>This page helps to understand the variables and equations of the shapes in presetShapeDefinitions.xml file.</p>
+				<p>I used it to build some of the shapes in <a href="https://github.com/meshesha/PPTXjs" target="_blank">PPTXjs</a> plugin.</p>
+				<br>
 
-						</td>
-					</tr>
 			</div>
+			<div id="container">
+				Enter Shape name: <input type="text" id="shape_name"> Or select : <select id="select_shape"><option value="no_shape"></option>></select><br>
+				<textarea rows="25" cols="80" id="fmla_reslt" readonly></textarea> 
+			</div>
+			<div id="const_values_warper" class="contents">
+				<h3><u>Constants values:</u></h3>
+				<div id="const_values" >
+					<span><i>h</i> - the height of the shape.</span><br>
+					<span><i>w</i> - the width of the shape.</span><br><br>
+					<table border="0">
+						<tr>
+							<td>
+								<span>l = 0 ;</span><br>
+								<span>t = 0 ;</span><br>
+								<span>b = h ;</span><br>
+								<span>r = w ;</span><br>
+								<span>hc = w/2 ;</span><br>
+								<span>vc = h/2 ;</span><br>
+								<span>hd2 = h/2 ;</span><br>
+								<span>hd3 = h/3 ;</span><br>
+								<span>hd4 = h/4 ;</span><br>
+								<span>hd5 = h/5 ;</span><br>
+								<span>hd6 = h/6 ;</span><br>
+								<span>hd8 = h/8 ;</span><br>
+								<span>wd2 = w/2 ;</span><br>
+								<span>wd3 = w/3 ;</span><br>
+								<span>wd4 = w/4 ;</span><br>
+								<span>wd5 = w/5 ;</span><br>
+								<span>wd6 = w/6 ;</span><br>
+								<span>wd8 = w/8 ;</span><br>
+								<span>wd10 = w/10 ;</span><br>
+							</td>
+							<td style="vertical-align:top">
+								<span>ls = max(w,h) ;</span><br>
+								<span>ss = min(w,h) ;</span><br>
+								<span>ssd2 = ss/2 ;</span><br>
+								<span>ssd4 = ss/4 ;</span><br>
+								<span>ssd6 = ss/6 ;</span><br>
+								<span>ssd8 = ss/8 ;</span><br>
+								<span>ssd16 = ss/16 ;</span><br>
+								<span>ssd32 = ss/32 ;</span><br><br>
+								<span>cd2 = 10800000; (180&deg;).</span><br>
+								<span>cd4 = 5400000; (90&deg;).</span><br>
+								<span>cd8 = 2700000; (45&deg;).</span><br>
+								<span>3cd4 = 16200000; (270&deg;).</span><br>
+								<span>3cd8 = 8100000; (135&deg;).</span><br>
+								<span>5cd8 = 13500000; (225&deg;).</span><br>
+								<span>7cd8 = 18900000; (315&deg;).</span><br>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<p><i>note: The units of cd's (cd2,cd4...) are in 60,000ths of a degree (10800000 = 180&deg;).</i></p>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div id="footer">
+			<hr>
+			<p>Copyright © 2017 Tady Meshesha, All Rights Reserved.<br><a href="https://github.com/meshesha/" target="_blank">https://github.com/meshesha</a></p>
 		</div>
 	</div>
 <script>
@@ -119,6 +161,7 @@
 				$('#select_shape').append($('<option>', { value : key }).text(value));
 			}
 		});
+		$("#select_shape").val("accentBorderCallout1").change();
 	});
 	$('#select_shape').change(function() {
 		var shapeVal = $(this).val();
@@ -158,7 +201,7 @@
 								var gdFmla = parseInt(getTextByPathList(gdNode,["attrs","fmla"]).substr(4));
 								txt += gdName + " = " + gdFmla + ";\n";
 							}
-							$("#fmla_reslt").text(txt);
+							$("#fmla_reslt").text("default adjust values:\n\n"+txt);
 						}
 					}
 					var gdLstNode = getTextByPathList(node,["gdLst"]);
@@ -231,13 +274,18 @@
 								txt += gdName + " = " + fmla + "\n";
 								//console.log(gdName," = ",fmla);
 							}
-							texta = $("#fmla_reslt").text();
-							$("#fmla_reslt").text(texta +"\nvar "+varsAry.join(", ")+ ";\n\n" + txt);
+							var texta = $("#fmla_reslt").text();
+							var subj = "Equations:\n\n";
+							$("#fmla_reslt").text(texta +"\n" + subj + "var "+varsAry.join(", ")+ ";\n\n" + txt);
 
 						}
 					}
 					var ahLstNode = getTextByPathList(node,["ahLst"]);
 					if(ahLstNode !== undefined){
+						var txt = $("#fmla_reslt").text();
+						var sbj = "adjust values ranges:\n";
+						$("#fmla_reslt").text(txt + "\n" + sbj);
+
 						var ahNode = getTextByPathList(ahLstNode,["ahXY"]);
 						if(ahNode !== undefined){
 							if(ahNode.constructor === Array){
@@ -262,8 +310,11 @@
 
 					var pathLstNode = node["pathLst"]; 
 					if(pathLstNode !== undefined){
-						texta = $("#fmla_reslt").text();
 						var pathNodes =  getTextByPathList(pathLstNode, ["path"]);
+						var txt = $("#fmla_reslt").text();
+						var sbjct = "Drawing parameters:\n\n";
+						$("#fmla_reslt").text(txt + "\n\n"+ sbjct);
+
 						if(pathNodes.constructor === Array){
 							Object.keys(pathNodes).forEach(function(key) {
 								var obja = null;
@@ -277,9 +328,8 @@
 					}
 				}else{
 					$("#fmla_reslt").text("");
-					//$("#select_shape").val("no_shape").change();
 					$("#select_shape option[value=no_shape]").prop("selected",true);
-					console.log("the shape: '"+sName+"' not found");
+					//console.log("the shape: '"+sName+"' not found");
 				}
 			}
 		});
@@ -334,7 +384,7 @@
 					}
 				}
 				var txt = $("#fmla_reslt").text();
-				$("#fmla_reslt").text(txt + "\n" + refVal+" : min="+minVal+", max="+maxVal + ";");
+				$("#fmla_reslt").text(txt +"\n"+ refVal+" : min="+minVal+", max="+maxVal + ";");
 				//console.log(refVal+" : min="+minVal+", max="+maxVal);
 			}
 	}
@@ -607,7 +657,8 @@
 				k++;
 			}
 		}
-		$("#fmla_reslt").text(texta + "\n\n" + d);
+		var texta = $("#fmla_reslt").text();
+		$("#fmla_reslt").text(texta + d);
 	}
 	function getTextByPathList(node, path) {
 
