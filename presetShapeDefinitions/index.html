@@ -651,9 +651,7 @@
 				var wR = sortByOrder[k].wR;
 				var stAng = sortByOrder[k].stAng;
 				var swAng = sortByOrder[k].swAng;
-				var endAng = stAng + swAng;
-				
-				d += "arcTo: rX=" + wR +" rY="+ hR +" startAng="+ stAng + " endAng=" + endAng +";\n";
+				d += "arcTo: rX=" + wR +" rY="+ hR +" stAng="+ stAng + " swAng=" + swAng +";\n";
 				k++;
 			}
 		}
