@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>presetShapeDefinitions.xml - Meshesha</title>
+
+<script type="text/javascript" src="./jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="./tXml.min.js"></script>
+
+<style>
+	html, body { margin: 0; padding: 0; }
+	#header h1{
+		text-align: center;
+	}
+	#warper {
+  		display: flex;
+		padding: 20px;
+	}
+	#warper > div {
+		flex: 1; /*grow*/
+	}
+	#const_values_warper{
+		padding: 10px;
+	}
+	#const_values{
+		font-size: 12px;
+	}
+</style>
+</head>
+<body>
+	<div id="header">
+		<h1>presetShapeDefinitions.xml</h1>
+	</div>
+	<div id="warper">
+		<div id="container">
+				
+			Enter Shape name: <input type="text" id="shape_name"> Or select : <select id="select_shape"><option value="no_shape"></option>></select><br>
+			<textarea rows="20" cols="100" id="fmla_reslt" readonly></textarea> 
+		</div>
+		<div id="const_values_warper">
+			<h2><u>Constants values:</u></h2>
+			<div id="const_values">
+				<span><i>h</i> - the height of the shape.</span><br>
+				<span><i>w</i> - the width of the shape.</span><br>
+				<table border="0">
+					<tr>
+						<td>
+							<span>l = 0 ;</span><br>
+							<span>t = 0 ;</span><br>
+							<span>b = h ;</span><br>
+							<span>r = w ;</span><br>
+							<span>hc = w/2 ;</span><br>
+							<span>vc = h/2 ;</span><br>
+							<span>hd2 = h/2 ;</span><br>
+							<span>hd3 = h/3 ;</span><br>
+							<span>hd4 = h/4 ;</span><br>
+							<span>hd5 = h/5 ;</span><br>
+							<span>hd6 = h/6 ;</span><br>
+							<span>hd8 = h/8 ;</span><br>
+							<span>wd2 = w/2 ;</span><br>
+							<span>wd3 = w/3 ;</span><br>
+							<span>wd4 = w/4 ;</span><br>
+							<span>wd5 = w/5 ;</span><br>
+							<span>wd6 = w/6 ;</span><br>
+							<span>wd8 = w/8 ;</span><br>
+							<span>wd10 = w/10 ;</span><br>
+						</td>
+						<td style="vertical-align:top">
+							<span>ls = max(w,h) ;</span><br>
+							<span>ss = min(w,h) ;</span><br>
+							<span>ssd2 = ss/2 ;</span><br>
+							<span>ssd4 = ss/4 ;</span><br>
+							<span>ssd6 = ss/6 ;</span><br>
+							<span>ssd8 = ss/8 ;</span><br>
+							<span>ssd16 = ss/16 ;</span><br>
+							<span>ssd32 = ss/32 ;</span><br><br>
+							<span>cd2 = 10800000; (180&deg;).</span><br>
+							<span>cd4 = 5400000; (90&deg;).</span><br>
+							<span>cd8 = 2700000; (45&deg;).</span><br>
+							<span>3cd4 = 16200000; (270&deg;).</span><br>
+							<span>3cd8 = 8100000; (135&deg;).</span><br>
+							<span>5cd8 = 13500000; (225&deg;).</span><br>
+							<span>7cd8 = 18900000; (315&deg;).</span><br>
+						</td>
+					</tr>
+					<tr>
+						<td>
+
+						</td>
+					</tr>
+			</div>
+		</div>
+	</div>
+<script>
+	function readTextFile(file, callback) {
+    	var rawFile = new XMLHttpRequest();
+		rawFile.overrideMimeType("application/xml");
+		rawFile.open("GET", file, true);
+		rawFile.onreadystatechange = function() {
+			if (rawFile.readyState === 4 && rawFile.status == "200") {
+				callback(rawFile.responseText);
+			}
+		}
+		rawFile.send(null);
+	}
+
+	$("#shape_name").on("input", readShapeParams);
+	var xmlFilePath = "presetShapeDefinitions.xml";
+	var shapesNameAry = [];
+	readTextFile(xmlFilePath, function(text){
+		var xmltojson =  tXml(text);
+		var data = xmltojson["presetShapeDefinitons"]
+		Object.keys(data).forEach(function(shapeName) {
+			if(shapeName != "attrs"){
+				shapesNameAry.push(shapeName);
+				key = shapeName;
+				value = shapeName;
+				$('#select_shape').append($('<option>', { value : key }).text(value));
+			}
+		});
+	});
+	$('#select_shape').change(function() {
+		var shapeVal = $(this).val();
+		if(shapeVal != "no_shape"){
+			$("#shape_name").val(shapeVal);
+		}else{
+			$("#shape_name").val("");
+		}
+		
+		readShapeParams();
+	});
+	function readShapeParams(){
+		readTextFile(xmlFilePath, function(text){
+			var xmltojson =  tXml(text);
+			var data = xmltojson["presetShapeDefinitons"];
+			var sName = $("#shape_name").val() ;
+
+			if(sName != ""){
+				$("#fmla_reslt").text("");
+				var node = getTextByPathList(data,[sName]);
+				if(node !== undefined){
+					$("#select_shape option[value="+sName+"]").prop("selected",true);
+					var avLstNode = getTextByPathList(node,["avLst"]);
+					if(avLstNode !== undefined){
+						var gdNode = getTextByPathList(avLstNode,["gd"]);
+						var txt = "";
+						if(gdNode !== undefined){
+							if(gdNode.constructor === Array){
+								for(var i=0; i<gdNode.length; i++){
+									var gdName = getTextByPathList(gdNode[i],["attrs","name"]);
+									var gdFmla = parseInt(getTextByPathList(gdNode[i],["attrs","fmla"]).substr(4));
+									txt += gdName + " = " + gdFmla + ";\n";
+									//console.log(gdName," = ",gdFmla);
+								}
+							}else{
+								var gdName = getTextByPathList(gdNode,["attrs","name"]);
+								var gdFmla = parseInt(getTextByPathList(gdNode,["attrs","fmla"]).substr(4));
+								txt += gdName + " = " + gdFmla + ";\n";
+							}
+							$("#fmla_reslt").text(txt);
+						}
+					}
+					var gdLstNode = getTextByPathList(node,["gdLst"]);
+					if(gdLstNode !== undefined){
+						var gdNode = getTextByPathList(gdLstNode,["gd"]);
+						if(gdNode !== undefined){
+							var txt = "";
+							var varsAry = [];
+							for(var i=0; i<gdNode.length; i++){
+								var gdName = getTextByPathList(gdNode[i],["attrs","name"]);
+								varsAry.push(gdName);
+								var gdFmla = getTextByPathList(gdNode[i],["attrs","fmla"]);
+								var gdFmlaAry = gdFmla.split(" ");
+								var fmla = "";
+								switch(gdFmlaAry[0]){
+									case "*/":
+										fmla = gdFmlaAry[1] + "*" + gdFmlaAry[2] + "/" + gdFmlaAry[3] + ";";
+										break;
+									case "+-":
+										fmla = gdFmlaAry[1] + "+" + gdFmlaAry[2] + "-" + gdFmlaAry[3] + ";";
+										break;
+									case "+/":
+										fmla = "("+gdFmlaAry[1] + "+" + gdFmlaAry[2] + ")/" + gdFmlaAry[3] + ";";
+										break;
+									case "?:":
+										fmla = "("+gdFmlaAry[1] + " > 0)?" + gdFmlaAry[2] + ":" + gdFmlaAry[3] + ";";
+										break;
+									case "abs":
+										fmla = "Math.abs("+gdFmlaAry[1] + ");";
+										break;
+									case "at2":
+										fmla = "Math.atan("+gdFmlaAry[2] +"/"+ gdFmlaAry[1] + ");";
+										break;
+									case "cat2":
+										fmla = gdFmlaAry[1]+"*Math.cos(Math.atan("+gdFmlaAry[3] +"/"+ gdFmlaAry[2] + "));";
+										break;
+									case "cos":
+										fmla = gdFmlaAry[1]+"*Math.cos("+gdFmlaAry[2] + ");";
+										break;
+									case "max":
+										fmla = "("+gdFmlaAry[1] + ">" + gdFmlaAry[2] + ")?"+gdFmlaAry[1]+":" + gdFmlaAry[2] + ";";
+										break;
+									case "min":
+										fmla = "("+gdFmlaAry[1] + "<" + gdFmlaAry[2] + ")?"+gdFmlaAry[1]+":" + gdFmlaAry[2] + ";";
+										break;
+									case "mod":
+										fmla = "Math.sqrt("+gdFmlaAry[1] +"*"+ gdFmlaAry[1] +" + "+gdFmlaAry[2] +"*"+ gdFmlaAry[2] +" + "+gdFmlaAry[3] +"*"+ gdFmlaAry[3] + ");";
+										break;
+									case "pin":
+										fmla = "("+gdFmlaAry[2] + "<" + gdFmlaAry[1] + ")?"+gdFmlaAry[1]+":(" + gdFmlaAry[2] +">"+gdFmlaAry[3]+")?"+gdFmlaAry[3]+":"+ gdFmlaAry[2]+ ";";
+										break;
+									case "sat2":
+										fmla = gdFmlaAry[1]+"*Math.sin(Math.atan("+gdFmlaAry[3] +"/"+ gdFmlaAry[2] + "));";
+										break;
+									case "sin":
+										fmla = gdFmlaAry[1]+"*Math.sin("+gdFmlaAry[2] + ");";
+										break;
+									case "sqrt":
+										fmla = "Math.sqrt("+gdFmlaAry[1] + ");";
+										break;
+									case "tan":
+										fmla = gdFmlaAry[1]+"*Math.tan("+gdFmlaAry[2] + ");";
+										break;
+									case "val":
+										fmla = gdFmlaAry[1];
+										break;
+									default:
+										console.log("the oprator: '"+gdFmlaAry[0]+"' is unknown");
+								}
+								txt += gdName + " = " + fmla + "\n";
+								//console.log(gdName," = ",fmla);
+							}
+							texta = $("#fmla_reslt").text();
+							$("#fmla_reslt").text(texta +"\nvar "+varsAry.join(", ")+ ";\n\n" + txt);
+
+						}
+					}
+					var ahLstNode = getTextByPathList(node,["ahLst"]);
+					if(ahLstNode !== undefined){
+						var ahNode = getTextByPathList(ahLstNode,["ahXY"]);
+						if(ahNode !== undefined){
+							if(ahNode.constructor === Array){
+								for(var i=0; i<ahNode.length; i++){
+									getAhLst(ahNode[i]);
+								}
+							}else{
+								getAhLst(ahNode)
+							}
+						}
+						ahNode = getTextByPathList(ahLstNode,["ahPolar"]);
+						if(ahNode !== undefined){
+							if(ahNode.constructor === Array){
+								for(var i=0; i<ahNode.length; i++){
+									getAhLst(ahNode[i]);
+								}
+							}else{
+								getAhLst(ahNode)
+							}
+						}
+					}
+
+					var pathLstNode = node["pathLst"]; 
+					if(pathLstNode !== undefined){
+						texta = $("#fmla_reslt").text();
+						var pathNodes =  getTextByPathList(pathLstNode, ["path"]);
+						if(pathNodes.constructor === Array){
+							Object.keys(pathNodes).forEach(function(key) {
+								var obja = null;
+								getPathsList(pathNodes[key]);
+								
+							});
+						}else{
+							getPathsList(pathNodes);
+						}
+						
+					}
+				}else{
+					$("#fmla_reslt").text("");
+					//$("#select_shape").val("no_shape").change();
+					$("#select_shape option[value=no_shape]").prop("selected",true);
+					console.log("the shape: '"+sName+"' not found");
+				}
+			}
+		});
+	}
+	function getAhLst(ahNode){
+		var ahNodeAttrs = ahNode["attrs"];
+			var refVals = [];
+			var minVals = [];
+			var maxVals = [];
+			Object.keys(ahNodeAttrs).forEach(function(keyName) {
+				if(keyName.indexOf("gdRef") != -1) {
+					var gdRefExt = keyName.substr(5)
+					var gdRefVal = ahNodeAttrs[keyName];
+					var obj = {};
+					obj.name = keyName;
+					obj.ext = gdRefExt;
+					obj.val = gdRefVal;
+					refVals.push(obj)
+				}
+				else if (keyName.indexOf("min") != -1) {
+					var minExt = keyName.substr(3)
+					var minVal = ahNodeAttrs[keyName];
+					var obj = {};
+					obj.name = keyName;
+					obj.ext = minExt;
+					obj.val = minVal;
+					minVals.push(obj)
+				}
+				else if (keyName.indexOf("max") != -1) {
+					var maxExt = keyName.substr(3)
+					var maxVal = ahNodeAttrs[keyName];
+					var obj = {};
+					obj.name = keyName;
+					obj.ext = maxExt;
+					obj.val = maxVal;
+					maxVals.push(obj)
+				}
+			});
+			for(var i=0;i<refVals.length;i++){
+				var refobj = refVals[i];
+				var refExt = refobj.ext;
+				var refVal = refobj.val;
+				var minVal,maxVal;
+				for(var j=0;j<minVals.length;j++){
+					if(minVals[j].ext == refExt){
+						minVal = minVals[j].val;
+					}
+				}
+				for(var k=0;k<maxVals.length;k++){
+					if(maxVals[k].ext == refExt){
+						maxVal = maxVals[k].val;
+					}
+				}
+				var txt = $("#fmla_reslt").text();
+				$("#fmla_reslt").text(txt + "\n" + refVal+" : min="+minVal+", max="+maxVal + ";");
+				//console.log(refVal+" : min="+minVal+", max="+maxVal);
+			}
+	}
+	function getPathsList(pathNodes){
+		var sortblAry = [];
+		var objAry = [];
+		var closeNode = pathNodes["close"];
+		var moveToNodes = pathNodes["moveTo"];
+		var lnToNodes = pathNodes["lnTo"];
+		var cubicBezToNodes = pathNodes["cubicBezTo"];
+		var quadBezToNodes = pathNodes["quadBezTo"];
+		var arcToNodes = pathNodes["arcTo"];
+
+		if(moveToNodes !== undefined){ 
+			if(moveToNodes.constructor === Array){
+				Object.keys(moveToNodes).forEach(function(key) {
+					var moveToPtNode = moveToNodes[key]["pt"];
+					if(moveToPtNode !== undefined){
+						var moveToNoPt = moveToPtNode["attrs"];
+						var ptX = moveToNoPt["x"];
+						var ptY = moveToNoPt["y"];
+						var ptOrdr = moveToNoPt["order"];
+						var ptObj = {};
+						ptObj.type = "moveTo";
+						ptObj.order = ptOrdr;
+						ptObj.x = ptX;
+						ptObj.y = ptY;
+						sortblAry.push(ptObj);
+					}
+				});
+			}else{
+				var moveToPtNode = moveToNodes["pt"];
+				if(moveToPtNode !== undefined){
+					var moveToNoPt = moveToPtNode["attrs"];
+					var ptX = moveToNoPt["x"];
+					var ptY = moveToNoPt["y"];
+					var ptOrdr = moveToNoPt["order"];
+					var ptObj = {};
+					ptObj.type = "moveTo";
+					ptObj.order = ptOrdr;
+					ptObj.x = ptX;
+					ptObj.y = ptY;
+					sortblAry.push(ptObj);
+				}
+			}
+		}
+		if(closeNode !== undefined){ 
+			if(closeNode.constructor === Array){
+				Object.keys(closeNode).forEach(function(key2) {
+					var ptObj = {};
+					var ptOrdr = closeNode[key2]["attrs"]["order"];
+					var ptObj = {};
+					ptObj.type = "close";
+					ptObj.order = ptOrdr;
+					sortblAry.push(ptObj);
+				});
+			}else{
+				var ptObj = {};
+				var ptOrdr = closeNode["attrs"]["order"];
+				ptObj.type = "close";
+				ptObj.order = ptOrdr;
+				sortblAry.push(ptObj);
+			}
+		}
+		if(lnToNodes !== undefined){ 
+			if(lnToNodes.constructor === Array){
+				Object.keys(lnToNodes).forEach(function(key) {
+					var lnToPtNode = lnToNodes[key]["pt"];
+					if(lnToPtNode !== undefined){
+						var lnToNoPt = lnToPtNode["attrs"];
+						var ptX = lnToNoPt["x"];
+						var ptY = lnToNoPt["y"];
+						var ptOrdr = lnToNoPt["order"];
+						var ptObj = {};
+						ptObj.type = "lnTo";
+						ptObj.order = ptOrdr;
+						ptObj.x = ptX;
+						ptObj.y = ptY;
+						sortblAry.push(ptObj);
+					}
+				});
+			}else{
+				var lnToPtNode = lnToNodes["pt"];
+				if(lnToPtNode !== undefined){
+					var lnToNoPt = lnToPtNode["attrs"];
+					var ptX = lnToNoPt["x"];
+					var ptY = lnToNoPt["y"];
+					var ptOrdr = lnToNoPt["order"];
+					var ptObj = {};
+					ptObj.type = "lnTo";
+					ptObj.order = ptOrdr;
+					ptObj.x = ptX;
+					ptObj.y = ptY;
+					sortblAry.push(ptObj);
+				}
+			}
+		}
+		if(cubicBezToNodes !== undefined){ 
+			if(cubicBezToNodes.constructor === Array){
+				Object.keys(cubicBezToNodes).forEach(function(key) {
+					var cubicBezToPtNodes = cubicBezToNodes[key]["pt"];
+					if(cubicBezToPtNodes !== undefined){
+						Object.keys(cubicBezToPtNodes).forEach(function(key2) {
+							var cubBzPts = cubicBezToPtNodes[key2];
+							Object.keys(cubBzPts).forEach(function(key3) {
+								var cubBzPt = cubBzPts[key3]["attrs"];
+								var ptX = cubBzPt["x"];
+								var ptY = cubBzPt["y"];
+								var ptOrdr = cubBzPt["order"];
+								var ptObj = {};
+								ptObj.type = "cubicBezTo";
+								ptObj.order = ptOrdr;
+								ptObj.x = ptX;
+								ptObj.y = ptY;
+								sortblAry.push(ptObj);
+							});
+						});
+					}
+				});
+			}else{
+				var cubicBezToPtNodes = cubicBezToNodes["pt"];
+				if(cubicBezToPtNodes !== undefined){
+					Object.keys(cubicBezToPtNodes).forEach(function(key2) {
+						var cubBzPts = cubicBezToPtNodes[key2];
+						Object.keys(cubBzPts).forEach(function(key3) {
+							var cubBzPt = cubBzPts[key3]["attrs"];
+							var ptX = cubBzPt["x"];
+							var ptY = cubBzPt["y"];
+							var ptOrdr = cubBzPt["order"];
+							var ptObj = {};
+							ptObj.type = "cubicBezTo";
+							ptObj.order = ptOrdr;
+							ptObj.x = ptX;
+							ptObj.y = ptY;
+							sortblAry.push(ptObj);
+						});
+					});
+				}
+			}
+		}
+		if(quadBezToNodes !== undefined){ 
+			if(quadBezToNodes.constructor === Array){
+				Object.keys(quadBezToNodes).forEach(function(key) {
+					var quadBezToPtNodes = quadBezToNodes[key]["pt"];
+					if(quadBezToPtNodes !== undefined){
+						Object.keys(quadBezToPtNodes).forEach(function(key2) {
+							
+							var quadBzPts = quadBezToPtNodes[key2];
+
+							//Object.keys(quadBzPts).forEach(function(key3) {
+								var cubBzPt = quadBzPts["attrs"];
+								var ptX = cubBzPt["x"];
+								var ptY = cubBzPt["y"];
+								var ptOrdr = cubBzPt["order"];
+								var ptObj = {};
+								ptObj.type = "quadBezTo";
+								ptObj.order = ptOrdr;
+								ptObj.x = ptX;
+								ptObj.y = ptY;
+								sortblAry.push(ptObj);
+							//});
+						});
+					}
+				});
+			}else{
+				var quadBezToPtNodes = quadBezToNodes["pt"];
+				if(quadBezToPtNodes !== undefined){
+					Object.keys(quadBezToPtNodes).forEach(function(key2) {
+						var quadBzPts = quadBezToPtNodes[key2];
+						//Object.keys(quadBzPts).forEach(function(key3) {
+							var cubBzPt = quadBzPts["attrs"];
+							var ptX = cubBzPt["x"];
+							var ptY = cubBzPt["y"];
+							var ptOrdr = cubBzPt["order"];
+							var ptObj = {};
+							ptObj.type = "quadBezTo";
+							ptObj.order = ptOrdr;
+							ptObj.x = ptX;
+							ptObj.y = ptY;
+							sortblAry.push(ptObj);
+						//});
+					});
+				}
+			}
+		}
+		if(arcToNodes !== undefined){ 
+			if(arcToNodes.constructor === Array){
+				Object.keys(arcToNodes).forEach(function(key) {
+					var arcToNodesAttrs = arcToNodes[key]["attrs"];
+					var arcOrder = arcToNodesAttrs["order"];
+					var hR = arcToNodesAttrs["hR"];
+					var wR = arcToNodesAttrs["wR"];
+					var stAng = arcToNodesAttrs["stAng"];
+					var swAng = arcToNodesAttrs["swAng"];
+					var ptObj = {};
+					ptObj.type = "arcTo";
+					ptObj.order = arcOrder;
+					ptObj.hR = hR;
+					ptObj.wR = wR;
+					ptObj.stAng = stAng;
+					ptObj.swAng = swAng;
+					sortblAry.push(ptObj);
+				});
+			}else{
+				var arcToNodesAttrs = arcToNodes["attrs"];
+				var arcOrder = arcToNodesAttrs["order"];
+				var hR = arcToNodesAttrs["hR"];
+				var wR = arcToNodesAttrs["wR"];
+				var stAng = arcToNodesAttrs["stAng"];
+				var swAng = arcToNodesAttrs["swAng"];
+				var ptObj = {};
+				ptObj.type = "arcTo";
+				ptObj.order = arcOrder;
+				ptObj.hR = hR;
+				ptObj.wR = wR;
+				ptObj.stAng = stAng;
+				ptObj.swAng = swAng;
+				sortblAry.push(ptObj);
+			}
+		}
+
+		var sortByOrder = sortblAry.slice(0);
+		sortByOrder.sort(function(a,b) {
+			return a.order - b.order;
+		});
+
+		//console.log("sortByOrder: ",sortByOrder)
+		var d = "";
+		var k = 0;
+		while(k<sortByOrder.length){
+			if(sortByOrder[k].type=="moveTo"){
+				var Mx = sortByOrder[k].x;
+				var My = sortByOrder[k].y;
+				d += "moveTo: " + Mx + "," + My + ";\n";
+				k++;
+			}else if(sortByOrder[k].type=="lnTo"){
+				var Lx = sortByOrder[k].x;
+				var Ly = sortByOrder[k].y;
+				d += "lineTo: " + Lx + "," + Ly + ";\n";
+				k++;
+			}else if(sortByOrder[k].type=="close"){
+				d += "close" + ";\n";
+				k++;
+			}else if(sortByOrder[k].type=="cubicBezTo"){ 
+				var Cx1 = sortByOrder[k].x;
+				var Cy1 = sortByOrder[k].y;
+				var Cx2 = sortByOrder[k+1].x;
+				var Cy2 = sortByOrder[k+1].y;
+				var Cx3 = sortByOrder[k+2].x;
+				var Cy3 = sortByOrder[k+2].y; 
+
+				d += "cubicBezTo: Cx1=" + Cx1 + ",Cy1=" + Cy1 +" Cx2="+ Cx2 + ",Cy2=" + Cy2 + " Cx3=" + Cx3 + ",Cy3=" + Cy3 + ";\n";
+				k += 3 ;
+			}else if(sortByOrder[k].type=="quadBezTo"){ 
+				var Qx1 = sortByOrder[k].x;
+				var Qy1 = sortByOrder[k].y;
+				var Qx2 = sortByOrder[k+1].x;
+				var Qy2 = sortByOrder[k+1].y;
+
+				d += "quadBezTo: Qx1=" + Qx1 + ",Qy1=" + Qy1 +" Qx2="+ Qx2 + ",Qy2=" + Qy2 + ";\n";
+				k += 2 ;
+			}else if(sortByOrder[k].type=="arcTo"){
+				var hR = sortByOrder[k].hR;
+				var wR = sortByOrder[k].wR;
+				var stAng = sortByOrder[k].stAng;
+				var swAng = sortByOrder[k].swAng;
+				var endAng = stAng + swAng;
+				
+				d += "arcTo: rX=" + wR +" rY="+ hR +" startAng="+ stAng + " endAng=" + endAng +";\n";
+				k++;
+			}
+		}
+		$("#fmla_reslt").text(texta + "\n\n" + d);
+	}
+	function getTextByPathList(node, path) {
+
+			if (path.constructor !== Array) {
+				throw Error("Error of path type! path is not array.");
+			}
+			
+			if (node === undefined) {
+				return undefined;
+			}
+			
+			var l = path.length;
+			for (var i=0; i<l; i++) {
+				node = node[path[i]];
+				if (node === undefined) {
+					return undefined;
+				}
+			}
+			
+			return node;
+		}   
+
+ 
+</script>
+
+</body>
+</html>
