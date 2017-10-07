@@ -151,8 +151,8 @@
 	var xmlFilePath = "presetShapeDefinitions.xml";
 	var shapesNameAry = [];
 	readTextFile(xmlFilePath, function(text){
-		var xmltojson =  tXml(text);
-		var data = xmltojson["presetShapeDefinitons"]
+		var xmltojson =  tXml(text,{simplify:1});
+		var data = xmltojson["?xml"]["presetShapeDefinitons"]
 		Object.keys(data).forEach(function(shapeName) {
 			if(shapeName != "attrs"){
 				shapesNameAry.push(shapeName);
@@ -175,8 +175,8 @@
 	});
 	function readShapeParams(){
 		readTextFile(xmlFilePath, function(text){
-			var xmltojson =  tXml(text);
-			var data = xmltojson["presetShapeDefinitons"];
+			var xmltojson =  tXml(text,{simplify:1});
+			var data = xmltojson["?xml"]["presetShapeDefinitons"];
 			var sName = $("#shape_name").val() ;
 
 			if(sName != ""){
@@ -314,14 +314,21 @@
 						var txt = $("#fmla_reslt").text();
 						var sbjct = "Drawing parameters:\n\n";
 						$("#fmla_reslt").text(txt + "\n\n"+ sbjct);
-
+						//console.log(pathNodes)
 						if(pathNodes.constructor === Array){
+							
 							Object.keys(pathNodes).forEach(function(key) {
-								var obja = null;
+								var txt = $("#fmla_reslt").text();
+								var sbjct = "Path:\n";
+								$("#fmla_reslt").text(txt + "\n"+ sbjct);
+								
 								getPathsList(pathNodes[key]);
 								
 							});
 						}else{
+							var txt = $("#fmla_reslt").text();
+							var sbjct = "Path:\n";
+							$("#fmla_reslt").text(txt + "\n"+ sbjct);
 							getPathsList(pathNodes);
 						}
 						
@@ -389,8 +396,8 @@
 			}
 	}
 	function getPathsList(pathNodes){
+		//console.log(pathNodes);
 		var sortblAry = [];
-		var objAry = [];
 		var closeNode = pathNodes["close"];
 		var moveToNodes = pathNodes["moveTo"];
 		var lnToNodes = pathNodes["lnTo"];
@@ -605,7 +612,7 @@
 				sortblAry.push(ptObj);
 			}
 		}
-
+		//console.log("sortblAry: ",sortblAry)
 		var sortByOrder = sortblAry.slice(0);
 		sortByOrder.sort(function(a,b) {
 			return a.order - b.order;
@@ -651,6 +658,7 @@
 				var wR = sortByOrder[k].wR;
 				var stAng = sortByOrder[k].stAng;
 				var swAng = sortByOrder[k].swAng;
+				
 				d += "arcTo: rX=" + wR +" rY="+ hR +" stAng="+ stAng + " swAng=" + swAng +";\n";
 				k++;
 			}
