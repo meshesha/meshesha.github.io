@@ -218,10 +218,12 @@
 								var fmla = "";
 								switch(gdFmlaAry[0]){
 									case "*/":
-										fmla = gdFmlaAry[1] + "*" + gdFmlaAry[2] + "/" + gdFmlaAry[3] + ";";
+										fmla = gdFmlaAry[1] + ((gdFmlaAry[2] != "1")? "*" + gdFmlaAry[2]:"") +
+										 	((gdFmlaAry[3] != "1")?"/" + gdFmlaAry[3]:"") + ";";
 										break;
 									case "+-":
-										fmla = gdFmlaAry[1] + "+" + gdFmlaAry[2] + "-" + gdFmlaAry[3] + ";";
+										fmla = ((gdFmlaAry[1] != "0")?gdFmlaAry[1]:"") + ((gdFmlaAry[2] != "0")?"+" + gdFmlaAry[2]:"") + 
+											((gdFmlaAry[3] != "0")?"-" + gdFmlaAry[3]:"") + ";";
 										break;
 									case "+/":
 										fmla = "("+gdFmlaAry[1] + "+" + gdFmlaAry[2] + ")/" + gdFmlaAry[3] + ";";
@@ -320,7 +322,15 @@
 							Object.keys(pathNodes).forEach(function(key) {
 								var txt = $("#fmla_reslt").text();
 								var sbjct = "Path:\n";
-								$("#fmla_reslt").text(txt + "\n"+ sbjct);
+								var pathAttrs = "";
+								var pathAttrsObj = pathNodes[key]["attrs"];
+								Object.keys(pathAttrsObj).forEach(function(key2){
+									if(key2 != "order"){
+										pathAttrs +=  key2 + " = " + pathAttrsObj[key2] + "; "
+									}
+									
+								});
+								$("#fmla_reslt").text(txt + "\n"+ sbjct + "(path attrs: " + pathAttrs + ")\n\n");
 								
 								getPathsList(pathNodes[key]);
 								
@@ -328,7 +338,15 @@
 						}else{
 							var txt = $("#fmla_reslt").text();
 							var sbjct = "Path:\n";
-							$("#fmla_reslt").text(txt + "\n"+ sbjct);
+							var pathAttrs = "";
+							var pathAttrsObj = pathNodes["attrs"];
+							Object.keys(pathAttrsObj).forEach(function(key){
+								if(key != "order"){
+									pathAttrs +=  key + " = " + pathAttrsObj[key] + "; "
+								}
+								
+							});
+							$("#fmla_reslt").text(txt + "\n"+ sbjct + "(path attrs: " + pathAttrs + ")\n\n");
 							getPathsList(pathNodes);
 						}
 						
@@ -343,57 +361,59 @@
 	}
 	function getAhLst(ahNode){
 		var ahNodeAttrs = ahNode["attrs"];
-			var refVals = [];
-			var minVals = [];
-			var maxVals = [];
-			Object.keys(ahNodeAttrs).forEach(function(keyName) {
-				if(keyName.indexOf("gdRef") != -1) {
-					var gdRefExt = keyName.substr(5)
-					var gdRefVal = ahNodeAttrs[keyName];
-					var obj = {};
-					obj.name = keyName;
-					obj.ext = gdRefExt;
-					obj.val = gdRefVal;
-					refVals.push(obj)
-				}
-				else if (keyName.indexOf("min") != -1) {
-					var minExt = keyName.substr(3)
-					var minVal = ahNodeAttrs[keyName];
-					var obj = {};
-					obj.name = keyName;
-					obj.ext = minExt;
-					obj.val = minVal;
-					minVals.push(obj)
-				}
-				else if (keyName.indexOf("max") != -1) {
-					var maxExt = keyName.substr(3)
-					var maxVal = ahNodeAttrs[keyName];
-					var obj = {};
-					obj.name = keyName;
-					obj.ext = maxExt;
-					obj.val = maxVal;
-					maxVals.push(obj)
-				}
-			});
-			for(var i=0;i<refVals.length;i++){
-				var refobj = refVals[i];
-				var refExt = refobj.ext;
-				var refVal = refobj.val;
-				var minVal,maxVal;
-				for(var j=0;j<minVals.length;j++){
-					if(minVals[j].ext == refExt){
-						minVal = minVals[j].val;
-					}
-				}
-				for(var k=0;k<maxVals.length;k++){
-					if(maxVals[k].ext == refExt){
-						maxVal = maxVals[k].val;
-					}
-				}
-				var txt = $("#fmla_reslt").text();
-				$("#fmla_reslt").text(txt +"\n"+ refVal+" : min="+minVal+", max="+maxVal + ";");
-				//console.log(refVal+" : min="+minVal+", max="+maxVal);
+		var refVals = [];
+		var minVals = [];
+		var maxVals = [];
+		Object.keys(ahNodeAttrs).forEach(function(keyName) {
+			if(keyName.indexOf("gdRef") != -1) {
+				var gdRefExt = keyName.substr(5)
+				var gdRefVal = ahNodeAttrs[keyName];
+				var obj = {};
+				obj.name = keyName;
+				obj.ext = gdRefExt;
+				obj.val = gdRefVal;
+				refVals.push(obj)
 			}
+			else if (keyName.indexOf("min") != -1) {
+				var minExt = keyName.substr(3)
+				var minVal = ahNodeAttrs[keyName];
+				var obj = {};
+				obj.name = keyName;
+				obj.ext = minExt;
+				obj.val = minVal;
+				minVals.push(obj)
+			}
+			else if (keyName.indexOf("max") != -1) {
+				var maxExt = keyName.substr(3)
+				var maxVal = ahNodeAttrs[keyName];
+				var obj = {};
+				obj.name = keyName;
+				obj.ext = maxExt;
+				obj.val = maxVal;
+				maxVals.push(obj)
+			}
+		});
+		for(var i=0;i<refVals.length;i++){
+			var refobj = refVals[i];
+			var refExt = refobj.ext;
+			var refVal = refobj.val;
+			var minVal,minName,maxVal,maxName;
+			for(var j=0;j<minVals.length;j++){
+				if(minVals[j].ext == refExt){
+					minVal = minVals[j].val;
+					minName = minVals[j].name;
+				}
+			}
+			for(var k=0;k<maxVals.length;k++){
+				if(maxVals[k].ext == refExt){
+					maxVal = maxVals[k].val;
+					maxName = maxVals[k].name;
+				}
+			}
+			var txt = $("#fmla_reslt").text();
+			$("#fmla_reslt").text(txt +"\n"+ refVal+" : "+minName+" = "+minVal+", "+maxName+" = "+maxVal + ";");
+			//console.log(refVal+" : min="+minVal+", max="+maxVal);
+		}
 	}
 	function getPathsList(pathNodes){
 		//console.log(pathNodes);
