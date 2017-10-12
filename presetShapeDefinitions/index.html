@@ -515,9 +515,9 @@
 					var cubicBezToPtNodes = cubicBezToNodes[key]["pt"];
 					if(cubicBezToPtNodes !== undefined){
 						Object.keys(cubicBezToPtNodes).forEach(function(key2) {
-							var cubBzPts = cubicBezToPtNodes[key2];
-							Object.keys(cubBzPts).forEach(function(key3) {
-								var cubBzPt = cubBzPts[key3]["attrs"];
+							//var cubBzPts = cubicBezToPtNodes[key2];
+							//Object.keys(cubBzPts).forEach(function(key3) {
+								var cubBzPt = cubicBezToPtNodes[key2]["attrs"];
 								var ptX = cubBzPt["x"];
 								var ptY = cubBzPt["y"];
 								var ptOrdr = cubBzPt["order"];
@@ -527,7 +527,7 @@
 								ptObj.x = ptX;
 								ptObj.y = ptY;
 								sortblAry.push(ptObj);
-							});
+							//});
 						});
 					}
 				});
@@ -535,9 +535,9 @@
 				var cubicBezToPtNodes = cubicBezToNodes["pt"];
 				if(cubicBezToPtNodes !== undefined){
 					Object.keys(cubicBezToPtNodes).forEach(function(key2) {
-						var cubBzPts = cubicBezToPtNodes[key2];
-						Object.keys(cubBzPts).forEach(function(key3) {
-							var cubBzPt = cubBzPts[key3]["attrs"];
+						//var cubBzPts = cubicBezToPtNodes[key2];
+						//Object.keys(cubBzPts).forEach(function(key3) {
+							var cubBzPt = cubicBezToPtNodes[key2]["attrs"];
 							var ptX = cubBzPt["x"];
 							var ptY = cubBzPt["y"];
 							var ptOrdr = cubBzPt["order"];
@@ -547,7 +547,7 @@
 							ptObj.x = ptX;
 							ptObj.y = ptY;
 							sortblAry.push(ptObj);
-						});
+						//});
 					});
 				}
 			}
