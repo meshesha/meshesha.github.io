@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>PPTXjs | Docs </title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link href="../layout/styles/layout.css" rel="stylesheet" type="text/css" media="all">
+</head>
+<body id="top">
+  <div class="wrapper row1">
+      <header id="header" class="hoc clear">
+        <div id="logo" class="fl_left">
+          <h1><a href="../index.html">PPTXjs</a></h1>
+        </div>
+        <nav id="mainav" class="fl_right">
+          <ul class="clear">
+            <li><a href="../index.html">Home</a></li>
+            <li class="active"><a href="docs.html">Docs</a></li>
+            <li><a href="demos.html">Demos</a></li>
+            <li><a href="https://github.com/meshesha">About</a></li>
+          </ul>
+        </nav>
+      </header>
+    </div>
+
+<div class="wrapper row3">
+  <main class="hoc container clear"> 
+    <!-- main body -->
+    <!-- ################################################################################################ -->
+    <div class="content"> 
+      <h3>browsers: </h3>
+      <ul>
+        <li>IE > 10</li>
+        <li>Edge</li>
+        <li>FireFox</li>
+        <li>chrome</li>
+      </ul>
+      <hr>
+      <h3>Support:</h3>
+     <ul>
+        <li>Text</li>
+          <ul>
+            <li>Font size</li>
+            <li>Font family</li>
+            <li>Font style: blod, italic, underline, stok</li>
+            <li>Color</li>
+            <li>hyperlink</li>
+            <li>bullets (include numeric)</li>
+        </ul>
+      <li>Text block (convert to Div)</li>
+        <ul>
+            <li>Align (Horizontal and Vertical)</li>
+            <li>Background color (single color)</li>
+            <li>Border (borderColor, borderWidth, borderType, strokeDasharray)</li>
+        </ul>
+      <li>Shapes (support most of shapes)</li>
+        <ul>
+            <li>Background color (single color, gradient colors)</li>
+            <li>Background image</li>
+            <li>Rotations</li>
+            <li>Align</li>
+            <li>Border</li>
+        </ul>
+      <li>Custom shape</li>
+      <li>Media</li>
+        <ul>
+            <li>Picture (jpg/jpeg,png,gif,svg)</li>
+            <li>Video (html5 video player: mp4,ogg,WebM)</li>
+            <ul>
+                <li>IE:MP4.</li>
+                <li>Chrome:MP4,	WebM,Ogg.</li>
+                <li>Firefox:MP4,WebM,Ogg.</li>
+            </ul>
+            <li>Audio (html5 audio player:mp3,ogg,Wav)</li>
+            <ul>
+                <li>IE:mp3.</li>
+                <li>Chrome:mp3,Wav,Ogg.</li>
+                <li>Firefox:mp3,Wav,Ogg</li>
+            </ul>
+        </ul>
+      <li>Graph</li>
+        <ul>
+            <li>Bar chart</li>
+            <li>Line chart</li>
+            <li>Pie chart</li>
+            <li>Scatter chart</li>
+        </ul>
+      <li>SmartArt diagrams</li>
+      <li>Custom table</li>
+      <li>Theme table</li>
+      <li>Theme</li>
+        <ul>
+            <li>Background color</li>
+            <li>Background image</li>
+        </ul>
+      <li>and more ...</li>
+    </ul>
+    <hr>
+    <h3>usage:</h3>
+      
+       <p>include necessary css files:</p>
+       <pre><code>
+          &lt;link rel="stylesheet" href="./css/pptxjs.css"&gt;
+          &lt;link rel="stylesheet" href="./css/nv.d3.min.css"&gt; &lt;!-- for charts graphs --&gt;
+        </code></pre>
+      <p>include necessary js files:</p>
+      <pre><code>
+          &lt;script type="text/javascript" src="./js/jquery-1.11.3.min.js"&gt;&lt;/script&gt;
+          &lt;script type="text/javascript" src="./js/jszip.min.js"&gt;&lt;/script&gt; &lt;!-- v2.. , NOT v.3.. --&gt;
+          &lt;script type="text/javascript" src="./js/filereader.js"&gt;&lt;/script&gt; &lt;!--https://github.com/meshesha/filereader.js --&gt;
+          &lt;script type="text/javascript" src="./js/d3.min.js"&gt;&lt;/script&gt; &lt;!-- for charts graphs --&gt;
+          &lt;script type="text/javascript" src="./js/nv.d3.min.js"&gt;&lt;/script&gt; &lt;!-- for charts graphs --&gt;
+          &lt;script type="text/javascript" src="./js/pptxjs.js"&gt;&lt;/script&gt;
+          &lt;script type="text/javascript" src="./js/divs2slides.js"&gt;&lt;/script&gt; &lt;!-- for slide show --&gt;
+      </code></pre>
+       <p>html body :</p>
+       <pre><code>
+         ...
+          &lt;div id="your_div_id_result"&gt;&lt;/div&gt;
+          optional:
+          &lt;input id="upload_pptx_fiile" type="file" /&gt;
+        ...
+        </code></pre>
+       <p>add javascript:</p>
+       <pre><code>
+          &lt;script type="text/javascript"&gt;
+            $("#your_div_id_result").pptxToHtml({
+              pptxFileUrl: "path/to/yore_pptx_file.pptx", 
+              fileInputId: "upload_pptx_fiile",
+              slideMode: false,
+              keyBoardShortCut: false,
+              mediaProcess: true, /** true,false: if true then process video and audio files */
+              slideModeConfig: {  //on slide mode (slideMode: true)
+                first: 1,
+                nav: false, /** true,false : show or not nav buttons*/
+                navTxtColor: "white", /** color */
+                navNextTxt:"&amp;#8250;", //"&gt;"
+                navPrevTxt: "&amp;#8249;", //"&lt;"
+                showPlayPauseBtn: false,/** true,false */
+                keyBoardShortCut: false, /** true,false */
+                showSlideNum: false, /** true,false */
+                showTotalSlideNum: false, /** true,false */
+                autoSlide: false, /** false or seconds (the pause time between slides) , F8 to active(keyBoardShortCut: true) */
+                randomAutoSlide: false, /** true,false ,autoSlide:true */ 
+                loop: false,  /** true,false */
+                background: "black", /** false or color*/
+                transition: "default", /** transition type: "slid","fade","default","random" , to show transition efects :transitionTime &gt; 0.5 */
+                transitionTime: 1 /** transition time in seconds */           
+              }
+            });
+            &lt;/script&gt;
+        </code></pre>
+      <!-- ################################################################################################ -->
+    </div>
+    <!-- / main body -->
+    <div class="clear"></div>
+  </main>
+</div>
+<div class="wrapper row5">
+  <div id="copyright" class="hoc clear"> 
+    <p class="fl_left">Copyright &copy; 2017 - All Rights Reserved - <a href="https://github.com/meshesha/">Tady Meshesha</a></p>
+    <p class="fl_right">Template by <a target="_blank" href="http://www.os-templates.com/" title="Free Website Templates">OS Templates</a></p>
+  </div>
+</div>
+<a id="backtotop" href="#top"><i class="fa fa-chevron-up"></i></a>
+<!-- JAVASCRIPTS -->
+<script src="../layout/scripts/jquery.min.js"></script>
+<script src="../layout/scripts/jquery.backtotop.js"></script>
+<script src="../layout/scripts/jquery.mobilemenu.js"></script>
+</body>
+</html>
