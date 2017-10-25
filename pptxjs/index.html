@@ -1,59 +1,108 @@
 <!DOCTYPE html>
 <html>
 <head>
+<title>PPTXjs</title>
 <meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>PPTXjs - Meshesha</title>
-
-<link rel="stylesheet" href="./css/pptxjs.css">
-<link rel="stylesheet" href="./css/nv.d3.min.css">
-
-<script type="text/javascript" src="./js/jquery-1.11.3.min.js"></script>
-<script type="text/javascript" src="./js/jszip.min.js"></script>
-<script type="text/javascript" src="./js/filereader.js"></script>
-<script type="text/javascript" src="./js/d3.min.js"></script>
-<script type="text/javascript" src="./js/nv.d3.min.js"></script>
-<script type="text/javascript" src="./js/pptxjs.js"></script>
-<script type="text/javascript" src="./js/divs2slides.js"></script>
-
-<style>
-	html, body { margin: 0; padding: 0; }
-	#warper { margin-right: auto; margin-left: auto; width: 900px; }
-</style>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link href="layout/styles/layout.css" rel="stylesheet" type="text/css" media="all">
 </head>
-<body>
-	<div id="warper">
-		<input id="uploadFileInput" type="file" />
-		<br><br>
-		<div id="container">
-			<div  id="result"></div>
-		</div>
-	</div>
-<script>
-	$("#result").pptxToHtml({
-		pptxFileUrl: "Sample_12.pptx",
-		fileInputId: "uploadFileInput",
-		slideMode: false,
-		keyBoardShortCut: false,
-		slideModeConfig: {  //on slide mode (slideMode: true)
-			first: 1,
-            nav: false, /** true,false : show or not nav buttons*/
-			navTxtColor: "white", /** color */
-            navNextTxt:"&#8250;", //">"
-			navPrevTxt: "&#8249;", //"<"
-			showPlayPauseBtn: false,/** true,false */
-            keyBoardShortCut: false, /** true,false */
-            showSlideNum: false, /** true,false */
-            showTotalSlideNum: false, /** true,false */
-            autoSlide: false, /** false or seconds (the pause time between slides) , F8 to active(keyBoardShortCut: true) */
-            randomAutoSlide: false, /** true,false ,autoSlide:true */ 
-            loop: false,  /** true,false */
-            background: "black", /** false or color*/
-            transition: "default", /** transition type: "slid","fade","default","random" , to show transition efects :transitionTime > 0.5 */
-            transitionTime: 1 /** transition time in seconds */
-		}
-	});
-</script>
+<body id="top">
+<div class="wrapper bgded" style="background-image:url('images/pptxjs.png');">
+  <div id="pageintro" class="hoc split clear">
+    <article class="box bg-coloured clear"> 
+      <h2 class="heading">PPTXjs - Meshesha</h2>
+      <p>jQuery plugin for convertation pptx to html using pure javascript.</p>
+      <footer>
+        <ul class="nospace inline pushright">
+          <li><a class="btn" href="https://github.com/meshesha/PPTXjs/releases">Download</a></li>
+          <li><a class="btn inverse" href="https://github.com/meshesha/PPTXjs">GitHub</a></li>
+        </ul>
+      </footer>
+    </article>
+  </div>
+</div>
+<div class="wrapper row1">
+  <header id="header" class="hoc clear">
+    <div id="logo" class="fl_left">
+      <h1><a href="index.html">PPTXjs</a></h1>
+    </div>
+    <nav id="mainav" class="fl_right">
+      <ul class="clear">
+        <li class="active"><a href="index.html">Home</a></li>
+        <li><a href="pages/docs.html">Docs</a></li>
+        <li><a href="pages/demos.html">Demos</a></li>
+        <li><a href="https://github.com/meshesha">About</a></li>
+      </ul>
+    </nav>
+  </header>
+</div>
+<div class="wrapper row3">
+  <main class="hoc container clear"> 
+    <!-- main body -->
+    <!-- ################################################################################################ -->
+    <div class="one_half first clear btmspace-80">
+      <h3 class="font-x2">Description</h3>
+      <p class="font-x1">jQuery plugin written in pure javascript for converting pptx file to html.</p>
+    </div>
+    <div class="group">
+      <article class="one_third first">
+        <h4>Supported browsers</h4>
+        <p>Supports modern browsers such as FireFox, Chrome, Edge etc.
+            But I have not checked in all browsers. For details see <a href="pages/docs.html">DOCS</a>.</p>
+      </article>
+      <article class="one_third">
+        <h4>LICENSE </h4>
+        <p>MIT licence - <a href="https://github.com/meshesha/PPTXjs/blob/master/LICENSE" target="_blank">for more details click here.</a></p>
+      </article>
+      <article class="one_third">
+        <h4>issues</h4>
+        <p>soon...</p>
+      </article>
+    </div>
+    <!-- ################################################################################################ -->
+    <!-- / main body -->
+    <div class="clear"></div>
+  </main>
+</div>
 
+<div class="wrapper bgded" style="background-image:url('images/pptxjs.png');">
+  <div id="elements" class="hoc split clear">
+    <div class="box bg-light clear"> 
+      <h3 class="font-x2">inspiration</h3>
+      <p class="btmspace-50">websites and other projects that help me to write this project.</p>
+      <article><a href="#"><i class="fa fa-diamond"></i></a>
+        <h6 class="heading">PPTX2HTML</h6>
+        <p>PPTX2HTML can convert MS-PPTX file to HTML by using pure javascript.</p>
+        <p>Issues: not Supports most of shapes , audio, video etc. 
+        <footer><a href="https://github.com/g21589/PPTX2HTML">Read More &raquo;</a></footer>
+      </article>
+      <article><a href="#"><i class="fa fa-diamond"></i></a>
+        <h6 class="heading">https://meshesha.github.io/presetShapeDefinitions</h6>
+        <p>A site I built that helped me understand the formulas in the file presetShapeDefinitions.xml. </p>
+        <footer><a href="https://meshesha.github.io/presetShapeDefinitions/">Read More &raquo;</a></footer>
+      </article>
+      <article><a href="#"><i class="fa fa-diamond"></i></a>
+        <h6 class="heading">websites</h6>
+        <ul>
+          <li><a href="http://officeopenxml.com/">officeopenxml</a></li>
+          <li><a href="http://www.ecma-international.org/publications/standards/Ecma-376.htm">Standard ECMA-376</a></li>
+        </ul>
+      </article>
+      <!-- ################################################################################################ -->
+    </div>
+  </div>
+</div>
+
+<div class="wrapper row5">
+  <div id="copyright" class="hoc clear"> 
+    <p class="fl_left">Copyright &copy; 2017 - All Rights Reserved - <a href="https://github.com/meshesha/">Tady Meshesha</a></p>
+    <p class="fl_right">Template by <a target="_blank" href="http://www.os-templates.com/" title="Free Website Templates">OS Templates</a></p>
+  </div>
+</div>
+<a id="backtotop" href="#top"><i class="fa fa-chevron-up"></i></a>
+<!-- JAVASCRIPTS -->
+<script src="layout/scripts/jquery.min.js"></script>
+<script src="layout/scripts/jquery.backtotop.js"></script>
+<script src="layout/scripts/jquery.mobilemenu.js"></script>
 </body>
 </html>
