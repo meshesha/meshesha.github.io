@@ -122,7 +122,15 @@
 						</tr>
 						<tr>
 							<td colspan="2">
-								<p><i>note: The units of cd's (cd2,cd4...) are in 60,000ths of a degree (10800000 = 180&deg;).</i></p>
+								<p><i>note:</i></p>
+								<ol>
+									<li>The units of angles (cd2,cd4...) are in 60,000ths of a degree (10800000 = 180&deg;).</li>
+									<li>All none angle Units are usually measured in EMU.<br>
+										1EMU=(1/914400) inch <br>
+										1EMU=(1/360000) cm <br>
+										Pixel = EMU * 96/914400.
+									</li>
+								</ol>
 							</td>
 						</tr>
 					</table>
@@ -204,6 +212,34 @@
 							$("#fmla_reslt").text("default adjust values:\n\n"+txt);
 						}
 					}
+					var ahLstNode = getTextByPathList(node,["ahLst"]);
+					if(ahLstNode !== undefined){
+						var txt = $("#fmla_reslt").text();
+						var sbj = "adjust values ranges:\n";
+						$("#fmla_reslt").text(txt + "\n" + sbj);
+
+						var ahNode = getTextByPathList(ahLstNode,["ahXY"]);
+						if(ahNode !== undefined){
+							if(ahNode.constructor === Array){
+								for(var i=0; i<ahNode.length; i++){
+									getAhLst(ahNode[i]);
+								}
+							}else{
+								getAhLst(ahNode)
+							}
+						}
+						ahNode = getTextByPathList(ahLstNode,["ahPolar"]);
+						if(ahNode !== undefined){
+							if(ahNode.constructor === Array){
+								for(var i=0; i<ahNode.length; i++){
+									getAhLst(ahNode[i]);
+								}
+							}else{
+								getAhLst(ahNode)
+							}
+						}
+					}
+					
 					var gdLstNode = getTextByPathList(node,["gdLst"]);
 					if(gdLstNode !== undefined){
 						var gdNode = getTextByPathList(gdLstNode,["gd"]);
@@ -235,10 +271,10 @@
 										fmla = "Math.abs("+gdFmlaAry[1] + ");";
 										break;
 									case "at2":
-										fmla = "Math.atan("+gdFmlaAry[2] +"/"+ gdFmlaAry[1] + ");";
+										fmla = "Math.atan2("+gdFmlaAry[2] +","+ gdFmlaAry[1] + ");";
 										break;
 									case "cat2":
-										fmla = gdFmlaAry[1]+"*Math.cos(Math.atan("+gdFmlaAry[3] +"/"+ gdFmlaAry[2] + "));";
+										fmla = gdFmlaAry[1]+"*Math.cos(Math.atan2("+gdFmlaAry[3] +","+ gdFmlaAry[2] + "));";
 										break;
 									case "cos":
 										fmla = gdFmlaAry[1]+"*Math.cos("+gdFmlaAry[2] + ");";
@@ -250,13 +286,15 @@
 										fmla = "("+gdFmlaAry[1] + "<" + gdFmlaAry[2] + ")?"+gdFmlaAry[1]+":" + gdFmlaAry[2] + ";";
 										break;
 									case "mod":
-										fmla = "Math.sqrt("+gdFmlaAry[1] +"*"+ gdFmlaAry[1] +" + "+gdFmlaAry[2] +"*"+ gdFmlaAry[2] +" + "+gdFmlaAry[3] +"*"+ gdFmlaAry[3] + ");";
+										fmla = "Math.sqrt("+((gdFmlaAry[1] != "0")?gdFmlaAry[1] +"*"+ gdFmlaAry[1]:"") + 
+												((gdFmlaAry[2] != "0")? " + "+gdFmlaAry[2] +"*"+ gdFmlaAry[2]:"") + 
+												((gdFmlaAry[3] != "0")?" + "+gdFmlaAry[3] +"*"+ gdFmlaAry[3]:"") + ");";
 										break;
 									case "pin":
 										fmla = "("+gdFmlaAry[2] + "<" + gdFmlaAry[1] + ")?"+gdFmlaAry[1]+":(" + gdFmlaAry[2] +">"+gdFmlaAry[3]+")?"+gdFmlaAry[3]+":"+ gdFmlaAry[2]+ ";";
 										break;
 									case "sat2":
-										fmla = gdFmlaAry[1]+"*Math.sin(Math.atan("+gdFmlaAry[3] +"/"+ gdFmlaAry[2] + "));";
+										fmla = gdFmlaAry[1]+"*Math.sin(Math.atan2("+gdFmlaAry[3] +","+ gdFmlaAry[2] + "));";
 										break;
 									case "sin":
 										fmla = gdFmlaAry[1]+"*Math.sin("+gdFmlaAry[2] + ");";
@@ -277,38 +315,12 @@
 								//console.log(gdName," = ",fmla);
 							}
 							var texta = $("#fmla_reslt").text();
-							var subj = "Equations:\n\n";
+							var subj = "\n\nEquations:\n\n";
 							$("#fmla_reslt").text(texta +"\n" + subj + "var "+varsAry.join(", ")+ ";\n\n" + txt);
 
 						}
 					}
-					var ahLstNode = getTextByPathList(node,["ahLst"]);
-					if(ahLstNode !== undefined){
-						var txt = $("#fmla_reslt").text();
-						var sbj = "adjust values ranges:\n";
-						$("#fmla_reslt").text(txt + "\n" + sbj);
-
-						var ahNode = getTextByPathList(ahLstNode,["ahXY"]);
-						if(ahNode !== undefined){
-							if(ahNode.constructor === Array){
-								for(var i=0; i<ahNode.length; i++){
-									getAhLst(ahNode[i]);
-								}
-							}else{
-								getAhLst(ahNode)
-							}
-						}
-						ahNode = getTextByPathList(ahLstNode,["ahPolar"]);
-						if(ahNode !== undefined){
-							if(ahNode.constructor === Array){
-								for(var i=0; i<ahNode.length; i++){
-									getAhLst(ahNode[i]);
-								}
-							}else{
-								getAhLst(ahNode)
-							}
-						}
-					}
+					
 
 					var pathLstNode = node["pathLst"]; 
 					if(pathLstNode !== undefined){
