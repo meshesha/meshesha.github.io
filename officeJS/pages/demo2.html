@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>PPTXjs | Demos </title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link rel="stylesheet" href="./css/jquery-ui.min.css">
+<link href="../layout/styles/layout.css" rel="stylesheet" type="text/css" media="all">
+<link rel="stylesheet" href="./css/pptxjs.css">
+<link rel="stylesheet" href="./css/nv.d3.min.css">
+
+<script type="text/javascript" src="./js/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="./js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="./js/jszip.min.js"></script>
+
+<script type="text/javascript" src="./js/filereader.js"></script>
+
+<script type="text/javascript" src="./js/d3.min.js"></script>
+<script type="text/javascript" src="./js/nv.d3.min.js"></script>
+<script type="text/javascript" src="./js/pptxjs.js"></script>
+<script type="text/javascript" src="./js/divs2slides.js"></script>
+
+<style>
+  /*#slide-resolte-contaniner{
+    width: 900px;
+    height: 800px;
+    overflow: scroll;
+  }*/
+  .code-container{
+    overflow: scroll;
+  }
+</style>
+</head>
+<body id="top">
+<div class="wrapper row1">
+    <header id="header" class="hoc clear">
+        <div id="logo" class="fl_left">
+        <h1><a href="../index.html">PPTXjs</a></h1>
+        </div>
+        <nav id="mainav" class="fl_right">
+        <ul class="clear">
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="docs.html">Docs</a></li>
+            <li class="active"><a href="demos.html">Demos</a></li>
+            <li><a href="https://github.com/meshesha">About</a></li>
+        </ul>
+        </nav>
+    </header>
+</div>
+<div class="wrapper row3">
+  <main class="hoc container clear"> 
+    <!-- main body -->
+    <div class="sidebar one_quarter first"> 
+      <h6>Demos</h6>
+      <nav class="sdb_holder">
+        <ul>
+          <li><a href="demos.html">Demo1 - show all slides</a></li>
+          <li class="active"><a href="demo2.html">Demo2 - show in slide Mode</a></li>
+          <li><a href="demo3.html">Demo3 - Input</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="content three_quarter"> 
+          <h3 class="font-x2">Demo2 - show in slide Mode</h3>
+          <p>File: <a href="/Sample_demo1.pptx">Sample_demo1.pptx</a></p>
+          <p>Description:</p>
+          <p>View all slides of "Sample_demo1.pptx" file in slide Mode.</p>
+          <p>Code:</p>
+          <div class="code-container">
+            <pre>
+              <code>
+&lt;div id=&quot;slide-resolte-contaniner&quot; &gt;&lt;/div&gt; 
+&lt;script&gt; 
+  $(&quot;#slide-resolte-contaniner&quot;).pptxToHtml({ 
+    pptxFileUrl: &quot;Sample_demo1.pptx&quot;, 
+    slideMode: true, 
+    keyBoardShortCut: true, 
+    mediaProcess: true, /** true,false: if true then process video and audio files */ 
+    slideModeConfig: { //on slide mode (slideMode: true) 
+      first: 1, 
+      nav: true, /** true,false : show or not nav buttons*/ 
+      navTxtColor: &quot;white&quot;, /** color */ 
+      navNextTxt:&quot;&amp;#8250;&quot;, //&quot;&gt;&quot; 
+      navPrevTxt: &quot;&amp;#8249;&quot;, //&quot;&lt;&quot; 
+      showPlayPauseBtn: false,/** true,false */ 
+      showSlideNum: false, /** true,false */ 
+      showTotalSlideNum: false, /** true,false */ 
+      autoSlide: false, /** false or seconds (the pause time between slides) , F8 to active(keyBoardShortCut: true) */ 
+      randomAutoSlide: false, /** true,false ,autoSlide:true */ 
+      loop: false, /** true,false */ 
+      background: &quot;black&quot;, /** false or color*/ 
+      transition: &quot;slid&quot;, /** transition type: &quot;slid&quot;,&quot;fade&quot;,&quot;default&quot;,&quot;random&quot; , to show transition efects :transitionTime &gt; 0.5 */ 
+      transitionTime: 1 /** transition time in seconds */ 
+    } 
+  }); 
+&lt;/script&gt;
+              </code>
+            </pre>
+          </div>
+          <p>Resolte:</p>
+          <button class="btn" onclick="showSlides()">Show</button>
+          <div id="slide-resolte-contaniner" ></div>
+          <script>
+              $("#slide-resolte-contaniner").pptxToHtml({
+                pptxFileUrl: "Sample_demo1.pptx",
+                slideMode: true,
+                keyBoardShortCut: true,
+                mediaProcess: true, /** true,false: if true then process video and audio files */
+                slideModeConfig: {  //on slide mode (slideMode: true)
+                  first: 1,
+                  nav: true, /** true,false : show or not nav buttons*/
+                  navTxtColor: "white", /** color */
+                  navNextTxt:"&#8250;", //">"
+                  navPrevTxt: "&#8249;", //"<"
+                  showPlayPauseBtn: false,/** true,false */
+                  showSlideNum: false, /** true,false */
+                  showTotalSlideNum: false, /** true,false */
+                  autoSlide: false, /** false or seconds (the pause time between slides) , F8 to active(keyBoardShortCut: true) */
+                  randomAutoSlide: false, /** true,false ,autoSlide:true */ 
+                  loop: false,  /** true,false */
+                  background: "black", /** false or color*/
+                  transition: "slid", /** transition type: "slid","fade","default","random" , to show transition efects :transitionTime > 0.5 */
+                  transitionTime: 1 /** transition time in seconds */
+                }
+              });
+              var dlog = $("#slide-resolte-contaniner").dialog({
+                width: 900,
+                height: 800,
+                autoOpen: false,
+                modal: true
+              });
+              function showSlides(){
+                dlog.dialog("open");
+              }
+            </script>
+    </div>
+    </script>
+    <!-- / main body -->
+    <div class="clear"></div>
+  </main>
+</div>
+
+<div class="wrapper row5">
+        <div id="copyright" class="hoc clear"> 
+          <p class="fl_left">Copyright &copy; 2017 - All Rights Reserved - <a href="https://github.com/meshesha/">Tady Meshesha</a></p>
+          <p class="fl_right">Template by <a target="_blank" href="http://www.os-templates.com/" title="Free Website Templates">OS Templates</a></p>
+        </div>
+      </div>
+<a id="backtotop" href="#top"><i class="fa fa-chevron-up"></i></a>
+<!-- JAVASCRIPTS -->
+<script src="../layout/scripts/jquery.backtotop.js"></script>
+<script src="../layout/scripts/jquery.mobilemenu.js"></script>
+</body>
+</html>
