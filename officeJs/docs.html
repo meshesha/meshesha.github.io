@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>PPTXjs | Demos </title>
+<meta charset="utf-8">
+<link href="../layout/styles/layout.css" rel="stylesheet" type="text/css" media="all">
+<!--All-->
+<script src="./jQuery/jquery-1.12.4.min.js"></script>
+<!--PDF-->
+<script src="./pdf/pdf.js"></script>
+<!--Docs-->
+<script src="./docxjs/jszip-utils.js"></script>
+<script src="./docxjs/mammoth.browser.min.js"></script>
+<!--PPTX-->
+<link rel="stylesheet" href="./pptxjs/pptxjs.css">
+<link rel="stylesheet" href="./pptxjs/nv.d3.min.css">
+<script type="text/javascript" src="./pptxjs/jszip.min.js"></script>
+<script type="text/javascript" src="./pptxjs/filereader.js"></script>
+<script type="text/javascript" src="./pptxjs/d3.min.js"></script>
+<script type="text/javascript" src="./pptxjs/nv.d3.min.js"></script>
+<script type="text/javascript" src="./pptxjs/pptxjs.js"></script>
+<script type="text/javascript" src="./pptxjs/divs2slides.js"></script>
+<!--All Spreadsheet -->
+<script type="text/javascript" src="./sheetjs/jquery.handsontable.full.js"></script>
+<script type="text/javascript" src="./sheetjs/xlsx.full.min.js"></script>
+<link rel="stylesheet" href="./sheetjs/jquery.handsontable.full.css">
+<!--All-->
+<script src="officejs.js"></script>
+<style>
+  #resolte-contaniner{
+    width: 800px;
+    height: 500px;
+    overflow: scroll;
+    border: 1px solid black;
+  }
+</style>
+</head>
+<body id="top">
+<div class="wrapper row1">
+    <header id="header" class="hoc clear">
+        <div id="logo" class="fl_left">
+        <h1><a href="../index.html">OfficeJs - Demos</a></h1>
+        </div>
+        <nav id="mainav" class="fl_right">
+        <ul class="clear">
+            <li><a href="../index.html">Home</a></li>
+            <li class="active"><a href="docs.html">Docs</a></li>
+            <li><a href="demos.html">Demos</a></li>
+            <li><a href="https://github.com/meshesha/OfficeJs">GitHub</a></li>
+            <li><a href="https://github.com/meshesha">About</a></li>
+        </ul>
+        </nav>
+    </header>
+</div>
+<div class="wrapper row3">
+  <main class="hoc container clear"> 
+    <!-- main body -->
+    <!-- ################################################################################################ -->
+    <div class="content three_quarter"> 
+        <div class="box bg-light clear"> 
+          <h3 class="font-x2" id="head-name">usage</h3>
+          <div id="description">
+            <p>1. Include all necessary .css and .js files in &lt;HEAD&gt; area:</p>
+            <pre>
+                <code>
+&lt;!--All--&gt;
+&lt;script src=&quot;./jQuery/jquery-1.12.4.min.js&quot;&gt;&lt;/script&gt; 
+&lt;!--PDF--&gt; &lt;script src=&quot;./pdf/pdf.js&quot;&gt;&lt;/script&gt; 
+&lt;!--Docs--&gt; &lt;script src=&quot;./docxjs/jszip-utils.js&quot;&gt;&lt;/script&gt; 
+&lt;script src=&quot;./docxjs/mammoth.browser.min.js&quot;&gt;&lt;/script&gt; 
+&lt;!--PPTX--&gt; 
+&lt;link rel=&quot;stylesheet&quot; href=&quot;./pptxjs/pptxjs.css&quot;&gt; 
+&lt;link rel=&quot;stylesheet&quot; href=&quot;./pptxjs/nv.d3.min.css&quot;&gt; 
+&lt;script type=&quot;text/javascript&quot; src=&quot;./pptxjs/jszip.min.js&quot;&gt;&lt;/script&gt; 
+&lt;script type=&quot;text/javascript&quot; src=&quot;./pptxjs/filereader.js&quot;&gt;&lt;/script&gt; 
+&lt;script type=&quot;text/javascript&quot; src=&quot;./pptxjs/d3.min.js&quot;&gt;&lt;/script&gt; 
+&lt;script type=&quot;text/javascript&quot; src=&quot;./pptxjs/nv.d3.min.js&quot;&gt;&lt;/script&gt; 
+&lt;script type=&quot;text/javascript&quot; src=&quot;./pptxjs/pptxjs.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;./pptxjs/divs2slides.js&quot;&gt;&lt;/script&gt; 
+&lt;!--All Spreadsheet --&gt; 
+&lt;script type=&quot;text/javascript&quot; src=&quot;./sheetjs/jquery.handsontable.full.js&quot;&gt;&lt;/script&gt; 
+&lt;script type=&quot;text/javascript&quot; src=&quot;./sheetjs/xlsx.full.min.js&quot;&gt;&lt;/script&gt; 
+&lt;link rel=&quot;stylesheet&quot; href=&quot;./sheetjs/jquery.handsontable.full.css&quot;&gt; 
+&lt;!--All--&gt; 
+&lt;script src=&quot;officejs.js&quot;&gt;&lt;/script&gt;
+                </code>
+            </pre>
+            <p>2. Add &lt;Div&gt; with id in &lt;BODY&gt; area:</p>
+            <pre>
+                <code>
+&lt;div id=&quot;resolte-contaniner&quot;&gt;&lt;/div&gt;
+                </code>
+            </pre>
+            <p>3.Use one or both javascript method to read file:</p>
+            <p>a. For reading remote file :</p>
+            <pre>
+                <code>
+var file_path = &quot;path/to/file.pptx&quot;; 
+$(&quot;#resolte-contaniner&quot;).officejs({
+   url: file_path
+});
+                </code>
+            </pre>
+            <p>a. For reading local file using INPUT object :</p>
+            <p>a1. First add &lt;Input&gt; with id in &lt;BODY&gt; area:</p>
+            <pre>
+                <code>
+&lt;input type=&quot;file&quot; id=&quot;select_file&quot; /&gt;                    
+                </code>
+            </pre>
+            <p>a2. And then use next script:</p>
+            <pre>
+                <code>
+$(&quot;#resolte-contaniner&quot;).officejs({
+  inputObjId: "select_file"
+});
+                </code>
+            </pre>
+          </div>
+        </div>
+    </div>
+    <!-- / main body -->
+    <div class="clear"></div>
+  </main>
+</div>
+
+<div class="wrapper row5">
+        <div id="copyright" class="hoc clear"> 
+          <p class="fl_left">Copyright &copy; 2017 - All Rights Reserved - <a href="https://github.com/meshesha/">Tady Meshesha</a></p>
+          <p class="fl_right">Template by <a target="_blank" href="http://www.os-templates.com/" title="Free Website Templates">OS Templates</a></p>
+        </div>
+      </div>
+<a id="backtotop" href="#top"><i class="fa fa-chevron-up"></i></a>
+</body>
+</html>
