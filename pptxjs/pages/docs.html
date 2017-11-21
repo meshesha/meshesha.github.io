@@ -93,6 +93,10 @@
             <li>Background color</li>
             <li>Background image</li>
         </ul>
+      <li>Equations and formulas</li>
+        <ul>
+            <li>display Equations and formulas as image</li>
+        </ul>
       <li>and more ...</li>
     </ul>
     <hr>
@@ -127,6 +131,7 @@
             $("#your_div_id_result").pptxToHtml({
               pptxFileUrl: "path/to/yore_pptx_file.pptx", 
               fileInputId: "upload_pptx_fiile",
+              slidesScale: "", //Change Slides scale by percent
               slideMode: false,
               keyBoardShortCut: false,
               mediaProcess: true, /** true,false: if true then process video and audio files */
