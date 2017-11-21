@@ -74,7 +74,7 @@
   $(&quot;#slide-resolte-contaniner&quot;).pptxToHtml({ 
     pptxFileUrl: &quot;Sample_demo1.pptx&quot;, 
     slideMode: true,
-    slidesScale: &quot;60%&quot;,
+    slidesScale: &quot;50%&quot;,
     keyBoardShortCut: true, 
     mediaProcess: true, /** true,false: if true then process video and audio files */ 
     slideModeConfig: { //on slide mode (slideMode: true) 
@@ -107,7 +107,7 @@
               $("#slide-resolte-contaniner").pptxToHtml({
                 pptxFileUrl: "Sample_demo1.pptx",
                 slideMode: true,
-                slidesScale: "60%",
+                slidesScale: "50%",
                 keyBoardShortCut: true,
                 mediaProcess: true, /** true,false: if true then process video and audio files */
                 slideModeConfig: {  //on slide mode (slideMode: true)
@@ -128,6 +128,7 @@
                 }
               });
               var dlog = $("#slide-dialog-box").dialog({
+                width: 800,
                 autoOpen: false,
                 modal: true
               });
