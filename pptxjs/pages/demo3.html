@@ -19,11 +19,13 @@
 <script type="text/javascript" src="./js/divs2slides.js"></script>
 
 <style>
+  /*
   #slide-resolte-contaniner{
     width: 800px;
     height: 500px;
     overflow: scroll;
   }
+  */
   .code-container{
     overflow: scroll;
   }
@@ -77,7 +79,8 @@
     $(&quot;#slide-resolte-contaniner&quot;).pptxToHtml({
         pptxFileUrl: &quot;&quot;,
         fileInputId: &quot;uploadFileInput&quot;, /*id of input tag*/ 
-        slideMode: false, 
+        slideMode: false,
+        slidesScale: &quot;50%&quot;,
         keyBoardShortCut: false 
     }); 
 &lt;/script&gt;
@@ -92,6 +95,7 @@
             pptxFileUrl: "",
             fileInputId: "uploadFileInput", /*id of input tag*/
             slideMode: false,
+            slidesScale: "50%",  
             keyBoardShortCut: false
             });
         </script>
