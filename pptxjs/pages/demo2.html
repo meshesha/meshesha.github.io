@@ -100,7 +100,9 @@
           </div>
           <p>Resolte:</p>
           <button class="btn" onclick="showSlides()">Show</button>
-          <div id="slide-resolte-contaniner" ></div>
+          <div id="slide-dialog-box">
+            <div id="slide-resolte-contaniner" ></div>
+          </div>
           <script>
               $("#slide-resolte-contaniner").pptxToHtml({
                 pptxFileUrl: "Sample_demo1.pptx",
@@ -125,7 +127,7 @@
                   transitionTime: 1 /** transition time in seconds */
                 }
               });
-              var dlog = $("#slide-resolte-contaniner").dialog({
+              var dlog = $("#slide-dialog-box").dialog({
                 autoOpen: false,
                 modal: true
               });
