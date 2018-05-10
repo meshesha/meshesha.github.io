@@ -74,16 +74,16 @@
   $(&quot;#slide-resolte-contaniner&quot;).pptxToHtml({ 
     pptxFileUrl: &quot;Sample_demo1.pptx&quot;, 
     slideMode: true,
-    slidesScale: &quot;80%&quot;,
+    slidesScale: &quot;50%&quot;,
     keyBoardShortCut: true, 
     mediaProcess: true, /** true,false: if true then process video and audio files */ 
     slideModeConfig: { //on slide mode (slideMode: true) 
       first: 1, 
       nav: true, /** true,false : show or not nav buttons*/ 
       navTxtColor: &quot;white&quot;, /** color */ 
-      showPlayPauseBtn: false,/** true,false */ 
-      showSlideNum: false, /** true,false */ 
-      showTotalSlideNum: false, /** true,false */ 
+      showPlayPauseBtn: true,/** true,false */ 
+      showSlideNum: true, /** true,false */ 
+      showTotalSlideNum: true, /** true,false */ 
       autoSlide: false, /** false or seconds (the pause time between slides) , F8 to active(keyBoardShortCut: true) */ 
       randomAutoSlide: false, /** true,false ,autoSlide:true */ 
       loop: false, /** true,false */ 
@@ -105,16 +105,16 @@
               $("#slide-resolte-contaniner").pptxToHtml({
                 pptxFileUrl: "Sample_demo1.pptx",
                 slideMode: true,
-                slidesScale: "80%",
+                slidesScale: "50%",
                 keyBoardShortCut: true,
                 mediaProcess: true, /** true,false: if true then process video and audio files */
                 slideModeConfig: {  //on slide mode (slideMode: true)
                   first: 1,
                   nav: true, /** true,false : show or not nav buttons*/
                   navTxtColor: "white", /** color */
-                  showPlayPauseBtn: false,/** true,false */
-                  showSlideNum: false, /** true,false */
-                  showTotalSlideNum: false, /** true,false */
+                  showPlayPauseBtn: true,/** true,false */
+                  showSlideNum: true, /** true,false */
+                  showTotalSlideNum: true, /** true,false */
                   autoSlide: false, /** false or seconds (the pause time between slides) , F8 to active(keyBoardShortCut: true) */
                   randomAutoSlide: false, /** true,false ,autoSlide:true */ 
                   loop: false,  /** true,false */
@@ -124,7 +124,7 @@
                 }
               });
               var dlog = $("#slide-dialog-box").dialog({
-                width: 700,
+                width: 500,
                 autoOpen: false,
                 modal: true
               });
