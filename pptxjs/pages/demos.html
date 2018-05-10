@@ -19,12 +19,10 @@
 <script type="text/javascript" src="./js/divs2slides.js"></script>
 
 <style>
-  #slide-resolte-contaniner{
-	  /*
-    width: 800px;
-    height: 500px;
+  #slide-resolte-box{
+    width: 600px;
+    height: 600px;
     overflow: scroll;
-	  */
   }
   .code-container{
     overflow: scroll;
@@ -86,7 +84,9 @@
             </pre>
           </div>
           <p>Resolte:</p>
-          <div id="slide-resolte-contaniner" ></div>
+	   <div id="slide-resolte-box">
+          	<div id="slide-resolte-contaniner" ></div>
+	   </div>
           <script>
               $("#slide-resolte-contaniner").pptxToHtml({
                 pptxFileUrl: "Sample_demo1.pptx",
