@@ -103,9 +103,9 @@
 </div>
 <script>
 $(document).ready(function(){
-    var outerContent = $('#slide-resolte-box');
-    var innerContent = $('#slide-resolte-contaniner');
-    outerContent.scrollLeft(300);
+	var myDiv = $("#slide-resolte-box");
+	var scrollto = myDiv.offset().top + (myDiv.height() / 2);
+	myDiv.animate({ scrollTop:  scrollto});
 });
 </script>
 <div class="wrapper row5">
