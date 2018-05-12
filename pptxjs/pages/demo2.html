@@ -21,11 +21,6 @@
 <script type="text/javascript" src="./js/divs2slides.js"></script>
 
 <style>
-  #slide-dialog-box{
-    width: 500px;
-    height: 450px;
-    overflow: scroll;
-  }
   .code-container{
     overflow: scroll;
   }
@@ -98,8 +93,8 @@
           </div>
           <p>Resolte:</p>
           <button class="btn" onclick="showSlides()">Show</button>
-          <div id="slide-dialog-box" title="demo-2: slide mode">
-            <div id="slide-resolte-contaniner" style="width:400px ;height:490; "></div>
+          <div id="slide-dialog-box" title="demo-2: slide mode" style="width: 500px;height: 450px;overflow: scroll;">
+            <div id="slide-resolte-contaniner" style="width:400px ;height:490px; "></div>
           </div>
           <script>
               $("#slide-resolte-contaniner").pptxToHtml({
