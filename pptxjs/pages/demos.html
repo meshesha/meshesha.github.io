@@ -102,9 +102,11 @@
   </main>
 </div>
 <script>
+$(document).ready(function(){
     var outerContent = $('#slide-resolte-box');
     var innerContent = $('#slide-resolte-contaniner');
-    outerContent.scrollLeft( (innerContent.width() - outerContent.width()) / 2);
+    outerContent.scrollRight( (innerContent.width() - outerContent.width()) / 2);
+});
 </script>
 <div class="wrapper row5">
         <div id="copyright" class="hoc clear"> 
