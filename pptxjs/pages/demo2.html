@@ -94,7 +94,7 @@
           <p>Resolte:</p>
           <button class="btn" onclick="showSlides()">Show</button>
           <div id="slide-dialog-box" title="demo-2: slide mode" style="width: 500px;height: 450px;overflow: scroll;">
-            <div id="slide-resolte-contaniner" style="width:400px ;height:490px; "></div>
+            <div id="slide-resolte-contaniner"></div>
           </div>
           <script>
               $("#slide-resolte-contaniner").pptxToHtml({
@@ -127,7 +127,8 @@
               function showSlides(){
                 dlog.dialog("open");
               }
-            
+              $("#slide-resolte-contaniner").width(500);
+              $("#slide-resolte-contaniner").height(500);
             </script>
     </div>
     </script>
