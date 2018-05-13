@@ -1,13 +1,13 @@
 /**
  * pptxjs.js
- * Ver. : 1.10.2
- * last update: 12/05/2018
+ * Ver. : 1.10.3
+ * last update: 14/05/2018
  * Author: meshesha , https://github.com/meshesha
  * LICENSE: MIT
  * url:https://meshesha.github.io/pptxjs
  * New: 
- *  - new divs2slides
- *  - fixed some issues
+ *  - new divs2slides (v.1.3.2)
+ *  - fixed div width issue
  */
 
 (function ( $ ) {
