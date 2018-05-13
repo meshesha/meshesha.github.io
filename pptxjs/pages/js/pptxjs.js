@@ -188,12 +188,14 @@
                             //$("#pptx-thumb").attr("src", "data:image/jpeg;base64," +rslt_ary[i]["data"]);
                             break;
                         case "slideSize":
+                                /*
                                 var slideWidth = rslt_ary[i]["data"].width;
                                 var slideHeight = rslt_ary[i]["data"].height;
                                 $("#"+divId).css({
                                     'width': slideWidth + 80,
                                     'height': slideHeight + 60
                                 });
+                                */
                             break;
                         case "globalCSS":
                             $result.append("<style>" +rslt_ary[i]["data"] + "</style>");
