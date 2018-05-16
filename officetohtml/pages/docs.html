@@ -62,17 +62,17 @@
     &lt;script src="./include/docxjs/jszip-utils.js"&gt;&lt;/script&gt;
     &lt;script src="./include/docxjs/mammoth.browser.min.js"&gt;&lt;/script&gt;
     &lt;!--PPTX--&gt;
-    &lt;link rel="stylesheet" href="./include/pptxjs/css/pptxjs.css"&gt;
-    &lt;link rel="stylesheet" href="./include/pptxjs/css/nv.d3.min.css"&gt;
-    &lt;script type="text/javascript" src="./include/pptxjs/js/filereader.js"&gt;&lt;/script&gt;
-    &lt;script type="text/javascript" src="./include/pptxjs/js/d3.min.js"&gt;&lt;/script&gt;
-    &lt;script type="text/javascript" src="./include/pptxjs/js/nv.d3.min.js"&gt;&lt;/script&gt;
-    &lt;script type="text/javascript" src="./include/pptxjs/js/pptxjs.js"&gt;&lt;/script&gt;
-    &lt;script type="text/javascript" src="./include/pptxjs/js/divs2slides.js"&gt;&lt;/script&gt;
+    &lt;link rel="stylesheet" href="./include/PPTXjs/css/pptxjs.css"&gt;
+    &lt;link rel="stylesheet" href="./include/PPTXjs/css/nv.d3.min.css"&gt;
+    &lt;script type="text/javascript" src="./include/PPTXjs/js/filereader.js"&gt;&lt;/script&gt;
+    &lt;script type="text/javascript" src="./include/PPTXjs/js/d3.min.js"&gt;&lt;/script&gt;
+    &lt;script type="text/javascript" src="./include/PPTXjs/js/nv.d3.min.js"&gt;&lt;/script&gt;
+    &lt;script type="text/javascript" src="./include/PPTXjs/js/pptxjs.js"&gt;&lt;/script&gt;
+    &lt;script type="text/javascript" src="./include/PPTXjs/js/divs2slides.js"&gt;&lt;/script&gt;
     &lt;!--All Spreadsheet --&gt;
     &lt;link rel="stylesheet" href="./include/handsontable/dist/handsontable.full.min.css"&gt;
     &lt;script type="text/javascript" src="./include/handsontable/dist/handsontable.full.js"&gt;&lt;/script&gt;
-    &lt;script type="text/javascript" src="./include/sheetjs/assets/js/xlsx.full.min.js"&gt;&lt;/script&gt;
+    &lt;script type="text/javascript" src="./include/SheetJS/assets/js/xlsx.full.min.js"&gt;&lt;/script&gt;
     &lt;!--Image viewer--&gt;
     &lt;link rel="stylesheet" href="./include/verySimpleImageViewer/css/jquery.verySimpleImageViewer.css"&gt;
     &lt;script type="text/javascript" src="./include/verySimpleImageViewer/js/jquery.verySimpleImageViewer.js"&gt;&lt;/script&gt;
@@ -332,7 +332,7 @@ $(&quot;#resolte-contaniner&quot;).officeToHtml({
             <tr>
                 <td class="tg-yw4l">2</td>
                 <td class="tg-yw4l"></td>
-                <td class="tg-yw4l">For the others options see <a href="https://github.com/mwilliamson/mammoth.js/" target="_blank">mammoth.js</a> github page<br></td>
+                <td class="tg-yw4l">For the others options see <a href="https://github.com/mwilliamson/mammoth.js/" target="_blank">mammoth.js</a> github page</td>
                 <td class="tg-yw4l"></td>
             </tr>
             </table>
@@ -369,24 +369,120 @@ $(&quot;#resolte-contaniner&quot;).officeToHtml({
                 </code>
             </pre>
             <table class="tg">
-              <tr>
-                <th class="tg-jc4p">#</th>
-                <th class="tg-jc4p">name</th>
-                <th class="tg-jc4p">description</th>
-                <th class="tg-jc4p">default value</th>
-              </tr>
-              <tr>
-                <td class="tg-yw4l">1</td>
-                <td class="tg-yw4l"></td>
-                <td class="tg-yw4l"></td>
-                <td class="tg-yw4l"></td>
-              </tr>
-              <tr>
-                <td class="tg-yw4l">2</td>
-                <td class="tg-yw4l"></td>
-                <td class="tg-yw4l"></td>
-                <td class="tg-yw4l"></td>
-              </tr>
+                <tr>
+                  <th class="tg-jc4p">#</th>
+                  <th class="tg-jc4p">name</th>
+                  <th class="tg-jc4p">description</th>
+                  <th class="tg-jc4p">default value</th>
+                </tr>
+                <tr>
+                  <td class="tg-yw4l">1</td>
+                  <td class="tg-yw4l">slidesScale</td>
+                  <td class="tg-yw4l">Change Slides scale by percent(%). for orginal size set this option to "" or "100%"</td>
+                  <td class="tg-yw4l">""</td>
+                </tr>
+                <tr>
+                  <td class="tg-yw4l">2</td>
+                  <td class="tg-yw4l">slideMode</td>
+                  <td class="tg-yw4l">If true, turn on presentation mode. The settings of the presentation mode are controlled by the variables "slideModeConfig" </td>
+                  <td class="tg-yw4l">false</td>
+                </tr>
+                <tr>
+                  <td class="tg-yw4l">3</td>
+                  <td class="tg-yw4l">keyBoardShortCut</td>
+                  <td class="tg-yw4l">If true, enable to enter or exit from presentation mode by keyboard shortcut F5 </td>
+                  <td class="tg-yw4l">false</td>
+                </tr>
+                <tr>
+                  <td class="tg-yw4l">4</td>
+                  <td class="tg-yw4l">mediaProcess</td>
+                  <td class="tg-yw4l">if true, then process video and audio files.If 'false', you can not play and see or hear the videos and audios embedded in the presentation.</td>
+                  <td class="tg-yw4l">true</td>
+                </tr>
+                <tr>
+                  <td class="tg-yw4l">5</td>
+                  <td class="tg-yw4l">jsZipV2</td>
+                  <td class="tg-yw4l">url link to jsZip version 2. <br>This allows the ability to load jsZip v.2 in case jsZip v.3 is loaded for another use.</td>
+                  <td class="tg-yw4l">false</td>
+                </tr>
+                <tr>
+                  <td class="tg-yw4l">6</td>
+                  <td class="tg-yw4l">slideModeConfig</td>
+                  <td class="tg-yw4l">settings of the presentation mode.<br> for more details click <a href="https://github.com/meshesha/divs2slides" target="_blank">here</a></td>
+                  <td class="tg-yw4l">{}</td>
+                </tr>
+                <tr>
+                  <td class="tg-yw4l">7</td>
+                  <td class="tg-yw4l">slideModeConfig.first</td>
+                  <td class="tg-yw4l">The first slide that will be loaded.</td>
+                  <td class="tg-yw4l">1</td>
+                </tr>
+                <tr>
+                  <td class="tg-yw4l">8</td>
+                  <td class="tg-yw4l">slideModeConfig.nav</td>
+                  <td class="tg-yw4l">show ('true') or hide ('false') navigator buttons.</td>
+                  <td class="tg-yw4l">true</td>
+                </tr>
+                <tr>
+                  <td class="tg-yw4l">9</td>
+                  <td class="tg-yw4l">slideModeConfig.navTxtColor</td>
+                  <td class="tg-yw4l">color of slide number text and total slides number shown in navigator area.</td>
+                  <td class="tg-yw4l">"black"</td>
+                </tr>
+                <tr>
+                  <td class="tg-yw4l">10</td>
+                  <td class="tg-yw4l">slideModeConfig.keyBoardShortCut</td>
+                  <td class="tg-yw4l">if true , enable to control presentation by keyboard shortcuts.<br> for keyboard shortcuts list click <a href="https://github.com/meshesha/divs2slides" target="_blank">here</a> </td>
+                  <td class="tg-yw4l">false</td>
+                </tr>
+                <tr>
+                  <td class="tg-yw4l">11</td>
+                  <td class="tg-yw4l">slideModeConfig.showSlideNum</td>
+                  <td class="tg-yw4l">if true , show slide number in navigator area.</td>
+                  <td class="tg-yw4l">true</td>
+                </tr>
+                <tr>
+                  <td class="tg-yw4l">12</td>
+                  <td class="tg-yw4l">slideModeConfig.showTotalSlideNum</td>
+                  <td class="tg-yw4l">if true , show total slides number in navigator area.</td>
+                  <td class="tg-yw4l">true</td>
+                </tr>
+                <tr>
+                  <td class="tg-yw4l">13</td>
+                  <td class="tg-yw4l">slideModeConfig.autoSlide</td>
+                  <td class="tg-yw4l">options:'false' or number (seconds). if set 'false' it disable auto slide mode. if set number then auto slide mode will be enabled and the number will be the time between slides.</td>
+                  <td class="tg-yw4l">1</td>
+                </tr>
+                <tr>
+                  <td class="tg-yw4l">14</td>
+                  <td class="tg-yw4l">slideModeConfig.randomAutoSlide</td>
+                  <td class="tg-yw4l">if true and autoSlide mode are enabled then The slides appear in random order.</td>
+                  <td class="tg-yw4l">false</td>
+                </tr>
+                <tr>
+                  <td class="tg-yw4l">15</td>
+                  <td class="tg-yw4l">slideModeConfig.loop</td>
+                  <td class="tg-yw4l">if true, in presentation mode , after last slide will go to first slide. in auto slideMode, the presentation will play in loop.</td>
+                  <td class="tg-yw4l">false</td>
+                </tr>
+                <tr>
+                  <td class="tg-yw4l">16</td>
+                  <td class="tg-yw4l">slideModeConfig.background</td>
+                  <td class="tg-yw4l">color of presentation background.</td>
+                  <td class="tg-yw4l">false</td>
+                </tr>
+                <tr>
+                  <td class="tg-yw4l">17</td>
+                  <td class="tg-yw4l">slideModeConfig.transition</td>
+                  <td class="tg-yw4l">transition types options: "slid","fade","default","random". </td>
+                  <td class="tg-yw4l">"default"</td>
+                </tr>
+                <tr>
+                  <td class="tg-yw4l">18</td>
+                  <td class="tg-yw4l">slideModeConfig.transitionTime</td>
+                  <td class="tg-yw4l">Time delay in seconds between slides.</td>
+                  <td class="tg-yw4l">1</td>
+                </tr>
             </table>
             <p class="p_heads_2">d.sheetSetting:</p>
             <pre>
@@ -431,14 +527,14 @@ $(&quot;#resolte-contaniner&quot;).officeToHtml({
               </tr>
               <tr>
                 <td class="tg-yw4l">1</td>
-                <td class="tg-yw4l"></td>
-                <td class="tg-yw4l"></td>
-                <td class="tg-yw4l"></td>
+                <td class="tg-yw4l">jqueryui</td>
+                <td class="tg-yw4l">if true , will use jQuery-ui interface.<br> To use this option, must include "jquery-ui.js" and "jquery-ui.css" in the HEAD area.</td>
+                <td class="tg-yw4l">false</td>
               </tr>
               <tr>
                 <td class="tg-yw4l">2</td>
                 <td class="tg-yw4l"></td>
-                <td class="tg-yw4l"></td>
+                <td class="tg-yw4l">For the others options see <a href="https://docs.handsontable.com/" target="_blank">handsontable tutorial</a></td>
                 <td class="tg-yw4l"></td>
               </tr>
             </table>
@@ -470,13 +566,7 @@ $(&quot;#resolte-contaniner&quot;).officeToHtml({
               <tr>
                 <td class="tg-yw4l">1</td>
                 <td class="tg-yw4l"></td>
-                <td class="tg-yw4l"></td>
-                <td class="tg-yw4l"></td>
-              </tr>
-              <tr>
-                <td class="tg-yw4l">2</td>
-                <td class="tg-yw4l"></td>
-                <td class="tg-yw4l"></td>
+                <td class="tg-yw4l">For options see <a href="https://github.com/meshesha/verySimpleImageViewer" target="_blank">verySimpleImageViewer</a> github page</td>
                 <td class="tg-yw4l"></td>
               </tr>
             </table>
