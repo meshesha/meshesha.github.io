@@ -6,9 +6,21 @@
         <meta charset="UTF-8">
         <link rel="stylesheet" type="text/css" href="./css/jquery.verySimpleImageViewer.css" >
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+
         <script src="./js/jquery.verySimpleImageViewer.js"></script>
+        
+        <script>hljs.initHighlightingOnLoad();</script>
+        <style>
+        table td {
+            border-right: 1px solid #ddd;
+        }
+        </style>
     </head>
     <body>
+        <h2>Zoom in both images and refresh the page.</h2>
         <table>
             <tr>
                 <td>
@@ -16,6 +28,40 @@
                 </td>
                 <td>
                         <div id="imageViewerContainer2" style="width: 400px; height:350px;" ></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <pre><code class="JavaScript">
+    $("#imageViewerContainer").verySimpleImageViewer({
+        imageSource: curect_file_path,
+        frame: ['100%', '100%'],
+        maxZoom: '900%',
+        zoomFactor: '10%',
+        saveZoomPos: false,
+        mouse: true,
+        keyboard: true,
+        toolbar: true,
+        rotateToolbar: true
+    });
+                    </code></pre>
+
+                </td>
+                <td>
+                    <pre><code class="JavaScript">
+    $("#imageViewerContainer2").verySimpleImageViewer({
+        imageSource: curect_file_path,
+        frame: ['100%', '100%'],
+        maxZoom: '900%',
+        zoomFactor: '10%',
+        saveZoomPos: true,
+        mouse: true,
+        keyboard: true,
+        toolbar: true,
+        rotateToolbar: true
+    });
+                    </code></pre>
+
                 </td>
             </tr>
         </table>
